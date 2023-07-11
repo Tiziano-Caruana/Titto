@@ -47,7 +47,7 @@ params:
 
     homeInfoParams:
         Title: Hi, I'm Titto!
-        Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me]()
+        Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me](https://tiziano-caruana.github.io/about_me/)
 
     socialIcons: # optional
         - name: 'Twitter'
