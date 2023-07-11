@@ -1,7 +1,7 @@
 # baseURL: 'http://localhost:1313'
 baseURL: 'https://Tiziano-Caruana.github.io'
 title: 'Tiziano Caruana'
-theme: 'PaperMod'
+theme: 'hugo-PaperMod'
 paginate: 5
 images: /static/favicon.ico
 
