@@ -1,0 +1,66 @@
+baseURL: 'http://localhost:1313'
+# baseURL: 'https://Tiziano-Caruana.github.io'
+title: 'Tiziano Caruana'
+theme: 'PaperMod'
+paginate: 5
+images: /static/favicon.ico
+
+languages:
+  en:
+    languageName: English
+    weight: 1
+    taxonomies:
+      tag: tags
+      category: categories
+      series: series
+    menu:
+      main:
+        - name: About me
+          url: about_me
+          weight: 1
+
+  it:
+    languageName: Italiano
+    weight: 2
+    taxonomies:
+      tag: tag
+      category: categorie
+      series: serie
+    menu:
+      main:
+        - name: Chi sono
+          url: about_me
+          weight: 1
+
+params:
+    env: production
+    description: "Tiziano Caruana's personal website"
+    defaultTheme: auto
+
+    ShowReadingTime: true
+    displayFullLangName: true
+    ShowBreadCrumbs: true
+    ShowCodeCopyButtons: true
+    ShowRssButtonInSectionTermList: true
+    ShowToc: true
+
+
+    homeInfoParams:
+        Title: Hi, I'm Titto!
+        Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me]()
+
+    socialIcons: # optional
+        - name: 'Twitter'
+          url: 'https://twitter.com/TittoCaru'
+        - name: 'LinkedIn'
+          url: 'https://www.linkedin.com/in/tiziano-caruana/'
+        - name: 'GitHub'
+          url: 'https://github.com/Tiziano-Caruana'
+
+
+    assets:
+      favicon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&usqp=CAU'
+
+    analytics:
+      google:
+        SiteVerificationTag: 'nrYRfe7E404N_587B4uHFkkfZGSqYjBtBt6BUh_opmA'
