@@ -134,6 +134,16 @@
                     <span>About me</span>
                 </a>
             </li>
+            <li>
+                <a href="https://Tiziano-Caruana.github.io/tags/blog" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Tiziano-Caruana.github.io/tags/writeup" title="Writeup">
+                    <span>Writeup</span>
+                </a>
+            </li>
         </ul>
     </nav>
 </header>
@@ -178,15 +188,33 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2>My first post
+    <h2>Flag Shop - HSCTF 2023
     </h2>
   </header>
   <div class="entry-content">
-    <p>If you’re reading this post, know that you are one of the first to visit this site. I built the site while productively procrastinating↗. In a little while, I have to go out and tomorrow I won’t be able to fix this stuff because I’ll be busy all day.
-Starting from the day after tomorrow, I will begin to add some content and sections to the site, and I would like to have a section dedicated to CTF writeups and a section dedicated to a sort of personal blog....</p>
+    <p>June 2023 - Blind NoSQL injection
+“hsctf pay to win confirmed?”
+Prior knowledge: basic web-related knowledge, Burpsuite
+Context We are provided with the link to the website and its corresponding source code. The website appears to be very simple, and the source code is quite short:
+Content of app.py:
+import os import traceback import pymongo.errors from flask import Flask, jsonify, render_template, request from pymongo import MongoClient app = Flask(__name__) FLAG = os....</p>
   </div>
-  <footer class="entry-footer"><span title='2023-07-11 18:00:00 +0200 CEST'>July 11, 2023</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;91 words</footer>
-  <a class="entry-link" aria-label="post link to My first post" href="https://Tiziano-Caruana.github.io/posts/first/"></a>
+  <footer class="entry-footer"><span title='2023-07-14 22:20:00 +0200 CEST'>July 14, 2023</span>&nbsp;·&nbsp;7 min&nbsp;·&nbsp;1329 words</footer>
+  <a class="entry-link" aria-label="post link to Flag Shop - HSCTF 2023" href="https://Tiziano-Caruana.github.io/posts/flagshop_hsctf/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>My personal website :D
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>I created this site in a hot week of July in Rome, between the 11th and 14th.
+I have always had the idea of creating a personal website just for myself, but I was convinced that you had to do something important in life to be able to publish one. A simple Tiziano Caruana could not do it, it was something for the President of the Republic and similar.
+In the summer of 2021, after convincing myself that even I could afford it, I published my first site (also static and hosted on GitHub pages) very simple, single-page written in JavaScript and Bootstrap (ugh)....</p>
+  </div>
+  <footer class="entry-footer"><span title='2023-07-14 19:45:00 +0200 CEST'>July 14, 2023</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;379 words</footer>
+  <a class="entry-link" aria-label="post link to My personal website :D" href="https://Tiziano-Caruana.github.io/posts/first_post/"></a>
 </article>
     </main>
     

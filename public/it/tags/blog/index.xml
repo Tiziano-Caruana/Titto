@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>blog on Tiziano Caruana</title>
+    <link>https://Tiziano-Caruana.github.io/it/tags/blog/</link>
+    <description>Recent content in blog on Tiziano Caruana</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>it</language>
+    <lastBuildDate>Fri, 14 Jul 2023 19:45:00 +0200</lastBuildDate><atom:link href="https://Tiziano-Caruana.github.io/it/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Il mio sito personale :D</title>
+      <link>https://Tiziano-Caruana.github.io/it/posts/first_post/</link>
+      <pubDate>Fri, 14 Jul 2023 19:45:00 +0200</pubDate>
+      
+      <guid>https://Tiziano-Caruana.github.io/it/posts/first_post/</guid>
+      <description>Perchè?</description>
+    </item>
+    
+  </channel>
+</rss>

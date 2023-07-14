@@ -6,14 +6,23 @@
     <description>Recent content on Tiziano Caruana</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>it</language>
-    <lastBuildDate>Tue, 11 Jul 2023 18:00:00 +0200</lastBuildDate><atom:link href="https://Tiziano-Caruana.github.io/it/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 14 Jul 2023 22:20:00 +0200</lastBuildDate><atom:link href="https://Tiziano-Caruana.github.io/it/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Il mio primo post</title>
-      <link>https://Tiziano-Caruana.github.io/it/posts/first/</link>
-      <pubDate>Tue, 11 Jul 2023 18:00:00 +0200</pubDate>
+      <title>Flag Shop - HSCTF 2023</title>
+      <link>https://Tiziano-Caruana.github.io/it/posts/flagshop_hsctf/</link>
+      <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
       
-      <guid>https://Tiziano-Caruana.github.io/it/posts/first/</guid>
-      <description>Temp post</description>
+      <guid>https://Tiziano-Caruana.github.io/it/posts/flagshop_hsctf/</guid>
+      <description>Building a custom Python payload to exploit a server-side JavaScript injection vulnerability</description>
+    </item>
+    
+    <item>
+      <title>Il mio sito personale :D</title>
+      <link>https://Tiziano-Caruana.github.io/it/posts/first_post/</link>
+      <pubDate>Fri, 14 Jul 2023 19:45:00 +0200</pubDate>
+      
+      <guid>https://Tiziano-Caruana.github.io/it/posts/first_post/</guid>
+      <description>Perchè?</description>
     </item>
     
     <item>
