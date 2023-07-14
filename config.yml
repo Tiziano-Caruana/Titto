@@ -21,6 +21,9 @@ languages:
         - name: Blog
           url: tags/blog
           weight: 2
+        - name: Writeup
+          url: tags/writeup
+          weight: 2
     params:
         homeInfoParams:
           Title: Hi, I'm Titto!
@@ -30,16 +33,19 @@ languages:
     languageName: Italiano
     weight: 2
     taxonomies:
-      tag: tag
-      category: categorie
-      series: serie
+      tag: tags
+      category: categories
+      series: series
     menu:
       main:
         - name: Chi sono
           url: about_me
           weight: 1
         - name: Blog
-          url: ../tags/blog
+          url: tags/blog
+          weight: 2
+        - name: Writeup
+          url: tags/writeup
           weight: 2
     params:
       homeInfoParams:

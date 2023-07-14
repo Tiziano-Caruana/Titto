@@ -5,7 +5,7 @@ ShowReadingTime: true
 ShowWordCount: true
 ---
 
-![Bocchi bag](/bocchi-bag.png)
+![Bocchi bag](/about_me/bocchi-bag.png)
 
 # About me
 
