@@ -18,6 +18,13 @@ languages:
         - name: About me
           url: about_me
           weight: 1
+        - name: Blog
+          url: tags/blog
+          weight: 2
+    params:
+        homeInfoParams:
+          Title: Hi, I'm Titto!
+          Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me](https://tiziano-caruana.github.io/about_me/)
 
   it:
     languageName: Italiano
@@ -31,6 +38,13 @@ languages:
         - name: Chi sono
           url: about_me
           weight: 1
+        - name: Blog
+          url: ../tags/blog
+          weight: 2
+    params:
+      homeInfoParams:
+        Title: Ciao, sono Titto!
+        Content: Sono uno studente di 18 anni presso l'Università La Sapienza di Roma, dove studio ingegneria informatica e gioco CTF con i [TRX](https://theromanxpl0it.github.io/). Non c'è bisogno di OSINTare per saperne di più [su di me](https://tiziano-caruana.github.io/it/about_me/)
 
 params:
     env: production
@@ -43,11 +57,6 @@ params:
     ShowCodeCopyButtons: true
     ShowRssButtonInSectionTermList: true
     ShowToc: true
-
-
-    homeInfoParams:
-        Title: Hi, I'm Titto!
-        Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me](https://tiziano-caruana.github.io/about_me/)
 
     socialIcons: # optional
         - name: 'Twitter'
