@@ -3,6 +3,8 @@ title: 'Chi sono'
 description: 'Pagina di presentazione'
 ShowReadingTime: true
 ShowWordCount: true
+sitemap:
+  priority: 0.9
 ---
 
 ![Bocchi bag](/about_me/bocchi-bag.png)

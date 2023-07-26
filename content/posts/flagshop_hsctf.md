@@ -8,6 +8,8 @@ tags:
 description: 'Building a custom Python payload to exploit a server-side JavaScript injection vulnerability'
 ShowReadingTime: true
 ShowWordCount: true
+sitemap:
+  priority: 0.5
 ---
 
 **June 2023 - Blind NoSQL injection**

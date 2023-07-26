@@ -3,6 +3,8 @@ title: 'About me'
 description: 'About me page'
 ShowReadingTime: true
 ShowWordCount: true
+sitemap:
+  priority: 1
 ---
 
 ![Bocchi bag](/about_me/bocchi-bag.png)

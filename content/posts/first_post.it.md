@@ -5,6 +5,8 @@ tags: ["blog", "programming", "free time"]
 description: 'Perchè?'
 ShowReadingTime: true
 ShowWordCount: true
+sitemap:
+  priority: 0.5
 ---
 
 Ho creato questo sito in una calda settimana di luglio romana, tra l'11 ed il 14.
