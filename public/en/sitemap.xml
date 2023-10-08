@@ -4,8 +4,8 @@
   <url>
     <loc>https://Tiziano-Caruana.github.io/tags/ctfs/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -19,7 +19,7 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/posts/flagshop_hsctf/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
                 rel="alternate"
@@ -34,8 +34,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/hsctf-2023/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -49,8 +49,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/posts/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -64,8 +64,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -79,8 +79,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -94,8 +94,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/writeup/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -109,8 +109,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/blog/</loc>
     <lastmod>2023-07-14T19:45:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -124,8 +124,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/free-time/</loc>
     <lastmod>2023-07-14T19:45:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -139,7 +139,7 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/posts/first_post/</loc>
     <lastmod>2023-07-14T19:45:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <xhtml:link
                 rel="alternate"
@@ -154,8 +154,8 @@
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/tags/programming/</loc>
     <lastmod>2023-07-14T19:45:00+02:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -168,7 +168,7 @@
                 />
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/about_me/</loc>
-    <changefreq>monthly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
@@ -182,8 +182,8 @@
                 />
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/categories/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
@@ -196,8 +196,8 @@
                 />
   </url><url>
     <loc>https://Tiziano-Caruana.github.io/series/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"

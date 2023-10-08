@@ -4,6 +4,7 @@ title: 'Tiziano Caruana'
 theme: 'PaperMod'
 paginate: 5
 images: /static/favicon.ico
+enableRobotsTXT: true
 
 languages:
   en:
@@ -27,7 +28,7 @@ languages:
     params:
         homeInfoParams:
           Title: Hi, I'm Titto!
-          Content: I'm an 18 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me](https://tiziano-caruana.github.io/about_me/)
+          Content: I'm an 19 year old student at La Sapienza University of Rome, where I'm studying computer engineering and playing CTFs for [TRX](https://theromanxpl0it.github.io/). No need to OSINT to know more [about me](https://tiziano-caruana.github.io/about_me/)
 
   it:
     languageName: Italiano
@@ -50,7 +51,7 @@ languages:
     params:
       homeInfoParams:
         Title: Ciao, sono Titto!
-        Content: Sono uno studente di 18 anni presso l'Università La Sapienza di Roma, dove studio ingegneria informatica e gioco CTF con i [TRX](https://theromanxpl0it.github.io/). Non c'è bisogno di OSINTare per saperne di più [su di me](https://tiziano-caruana.github.io/it/about_me/)
+        Content: Sono uno studente di 19 anni presso l'Università La Sapienza di Roma, dove studio ingegneria informatica e gioco CTF con i [TRX](https://theromanxpl0it.github.io/). Non c'è bisogno di OSINTare per saperne di più [su di me](https://tiziano-caruana.github.io/it/about_me/)
 
 params:
     env: production
@@ -81,6 +82,6 @@ params:
         SiteVerificationTag: '-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw'
 
 sitemap:
-  changefreq: monthly
+  changefreq: daily
   filename: sitemap.xml
-  priority: 0.5
+  priority: 1

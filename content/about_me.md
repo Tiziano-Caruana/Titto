@@ -11,7 +11,7 @@ sitemap:
 
 # About me
 
-Hi, I'm Tiziano Caruana, an 18-year-old guy from Rome. Here's some information about me:
+Hi, I'm Tiziano Caruana, an 19-year-old guy from Rome. Here's some information about me:
 
 - **Interests**: back-end development, cybersecurity, CTF, gym, walking (👴).
 - **Education**: technical high-school in computer science.

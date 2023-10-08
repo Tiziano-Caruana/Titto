@@ -11,7 +11,7 @@ sitemap:
 
 # Su di me
 
-Ciao, sono Tiziano Caruana, un ragazzo romano di 18 anni. Ecco un po' di informazioni su di me:
+Ciao, sono Tiziano Caruana, un ragazzo romano di 19 anni. Ecco un po' di informazioni su di me:
 
 - **Interessi**: back-end development, sicurezza informatica, CTF, gym, passeggiare (👴).
 - **Formazione**: ITIS informatico.
