@@ -11,37 +11,14 @@ sitemap:
 
 # About me
 
-Hi, I'm Tiziano Caruana, an 19-year-old guy from Rome. Here's some information about me:
+I'm currently delving into the world of web security, primarily through Capture The Flag (CTF) competitions with my team, TRX, and various platforms offering diverse challenges on the subject.
 
-- **Interests**: back-end development, cybersecurity, CTF, gym, walking (👴).
-- **Education**: technical high-school in computer science.
-- **Work experience**:
-  - Internship as a database developer, summer 2021
-  - Internship at a start-up as a cloud developer, summer-fall 2022.
-- **National cybersecurity competitions:**
-  - **OliCyber**: I participated in the Italian Cybersecurity Olympiad, qualifying for the finals in the 2022/23 edition.
-  - **CyberChallenge.it**: in the 2023 edition, I managed to be selected among the 20 chosen by Sapienza for training, and I won the national final with the university team.
-- **TRX**: I am a member of [TRX](https://theromanxpl0it.github.io/) (TheRomanXpl0it), the CTF team of Sapienza. I mainly solve web challenges, but I try to help the team in misc (OSINT/geoguessing) and forensics (mem dumps).
-- **Future goals**: I am preparing for the TOLC-I to officially enter Sapienza as a computer engineer and I am building a foundation in crypto and pwn to prepare for individual competitions in OliCyber.
+I often enjoy writing writeups on challenges that I found fun or interesting for some reason. I dedicate several hours to their drafting, striving to make them as understandable as possible even for inexperienced individuals who have only a vague idea of how the internet works.
 
-# My story
+I firmly believe that theoretical study should be complemented and stimulated by both practical application of skills and the presentation of compelling stories and current events. I think that people are more likely to grasp even complex technical concepts if they help better understand the workings of infrastructures and systems that have recently been victims of attacks or errors.
 
-![Maybe I'm not the thinker](https://media.tenor.com/kOJnwQX83BQAAAAd/bro-thinks-hes-the-thinker-bro-thinking.gif)
+It's utopian to think that such learning can be applied in a school or university setting, perhaps impractical. That's why I believe it's important for every individual to dedicate themselves without hesitation to their passions outside of school hours. What is taught in schools, in any institution and regarding any subject, is little more than the bare minimum necessary to not be considered completely ignorant of the topics presented.
 
-I started dealing with computers when I was 7 years old, when my parents couldn't understand what was written in troubleshooting manuals. So I had my first experience with network operations and some anglicisms.
+I would like to share this message with as many people as possible and contribute to helping young people who want to delve into this world as I am trying to do. However, I realize that I lack the technical and pedagogical means, besides "being nobody" in terms of professional experience objectively convertible into trust for a role in education different from the traditional school teacher.
 
-At 12, I chose to enroll in a technical institute specializing in computer science, even though I had neither the knowledge nor the means to understand what this world included, and I had never dealt with half a line of code, so I pretty much decided at random.
-
-Two years later, I became passionate about the world of video games thanks to a psychological horror called Doki Doki Literature Club, which plays with your computer files to make you lose a few years of life. I was fascinated by the experience and decided to figure out how such a game could be created.
-
-After a year spent on Ren'Py, creating mods for DDLC and mini-games, I realized how little I liked the artistic process behind software creation, compared to writing backend code itself. From here, after witnessing the slowness of progress in computer science lessons, I decided to deepen this world on my own.
-
-In the summer of 2021, I did an internship as a database developer, where I acquired new skills and realized how much I liked this world. I then did an internship at a start-up as a cloud developer between summer and fall 2022, where I had the opportunity to understand the differences between personal projects and real-world enterprise software.
-
-In September 2021, while browsing Instagram, I discovered the Italian Cybersecurity Olympiad, dedicated to high school students. Despite knowing nothing about cybersecurity, I spent two months behind my school tutors and the school presidency in order to get us enrolled in the competitions. After passing the territorial phase, I was eliminated in the regional phase by only two positions.
-
-In the 2022 edition of OliCyber, I qualified for the finals and had the opportunity to participate in the training camp at the Campus ITC ILO in Turin. Even though I had little time to improve my skills, the experience of being among many other motivated and skilled kids gave me great motivation.
-
-In the 2023 edition of CyberChallenge.it, I managed to be selected among the 20 chosen by Sapienza for training. In the local competition, I came in sixth place, a result that allowed me to enter the university team with which I then won the national final.
-
-Although I still feel like a novice in many areas, I realize how much progress I have made so far and how much I can still improve.
+That's why I try to improve with every competition and write writeups whenever I have the opportunity.

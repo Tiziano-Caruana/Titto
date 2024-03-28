@@ -9,9 +9,8 @@ description: 'Building a custom Python payload to exploit a server-side JavaScri
 ShowReadingTime: true
 ShowWordCount: true
 sitemap:
-  priority: 0.5
+  priority: 1
 ---
-# Versione italiana non ancora disponibile. Data di pubblicazione prevista: 16 luglio
 
 **June 2023 - Blind NoSQL injection**
 

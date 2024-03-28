@@ -2,28 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Tiziano Caruana</title>
-    <link>https://Tiziano-Caruana.github.io/it/posts/</link>
+    <link>http://localhost:1313/it/posts/</link>
     <description>Recent content in Posts on Tiziano Caruana</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>it</language>
-    <lastBuildDate>Fri, 14 Jul 2023 22:20:00 +0200</lastBuildDate><atom:link href="https://Tiziano-Caruana.github.io/it/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Flag Shop - HSCTF 2023</title>
-      <link>https://Tiziano-Caruana.github.io/it/posts/flagshop_hsctf/</link>
-      <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
-      
-      <guid>https://Tiziano-Caruana.github.io/it/posts/flagshop_hsctf/</guid>
-      <description>Building a custom Python payload to exploit a server-side JavaScript injection vulnerability</description>
-    </item>
-    
-    <item>
-      <title>Il mio sito personale :D</title>
-      <link>https://Tiziano-Caruana.github.io/it/posts/first_post/</link>
-      <pubDate>Fri, 14 Jul 2023 19:45:00 +0200</pubDate>
-      
-      <guid>https://Tiziano-Caruana.github.io/it/posts/first_post/</guid>
-      <description>Perchè?</description>
-    </item>
-    
+    <language>it</language><atom:link href="http://localhost:1313/it/posts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
