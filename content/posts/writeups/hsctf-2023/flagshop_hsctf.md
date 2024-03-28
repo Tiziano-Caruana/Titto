@@ -23,7 +23,7 @@ sitemap:
 We are provided with the link to the website and its corresponding source code.
 The website appears to be very simple, and the source code is quite short:
 
-![Screenshot showing the Flag Shop homepage with search bar and table](/writeups/flagshop_hsctf/FlagShopHome.png)
+![Screenshot showing the Flag Shop homepage with search bar and table](/writeups/hsctf-2023/flagshop_hsctf/FlagShopHome.png)
 
 Content of ```app.py```:
 ```python
@@ -174,22 +174,22 @@ With ```');``` we escaped the string and closed the statement, giving us an <a h
 
 By testing or reading the documentation, we can discover that this happens because only the last valid condition is computed by the $where clause. This means that we can write anything in the first ```include```, since it won't be interpreted (```something'); this.challenge.includes('```):
 
-![Burp Suite screenshot showing the result of a request sent with the payload (```something'); this.challenge.includes('```), which returns all the results from the database](/writeups/flagshop_hsctf/burp1.png)
+![Burp Suite screenshot showing the result of a request sent with the payload (```something'); this.challenge.includes('```), which returns all the results from the database](/writeups/hsctf-2023/flagshop_hsctf/burp1.png)
 
 While the second one is interpreted (```something'); this.challenge.includes('search```):
 
-![Burp Suite screenshot showing that if we include a search parameter in the injected 'include', the query will execute it](/writeups/flagshop_hsctf/burp2.png)
+![Burp Suite screenshot showing that if we include a search parameter in the injected 'include', the query will execute it](/writeups/hsctf-2023/flagshop_hsctf/burp2.png)
 
 So we have the vulnerability, but we cannot directly retrieve the flag since it is excluded from the query (if you're not sure, please reread the source code).
 I then tried a payload with a boolean operator (```something'); always_true() || this.challenge.includes('something```):
 
-![Burp Suite screenshot showing all challenges result after including an 'or 1==1' before the injected search parameter](/writeups/flagshop_hsctf/burp3.png)
+![Burp Suite screenshot showing all challenges result after including an 'or 1==1' before the injected search parameter](/writeups/hsctf-2023/flagshop_hsctf/burp3.png)
 
 
 
 This is very useful for searching for a potential attack. We can perform a conditional check on the flag using ```&& this.challenge.includes('flag')``` to only get results from the ```flag-shop``` entity. We can do a first test with the flag format (```something'); this.flag.includes('flag{') && this.challenge.includes('flag```):
-![Burp Suite screenshot showing result including 'flag{'](/writeups/flagshop_hsctf/FirstBlind.png)
-![Burp Suite screenshot showing no result after including a random word as search parameter](/writeups/flagshop_hsctf/BlindNotWorking.png)
+![Burp Suite screenshot showing result including 'flag{'](/writeups/hsctf-2023/flagshop_hsctf/FirstBlind.png)
+![Burp Suite screenshot showing no result after including a random word as search parameter](/writeups/hsctf-2023/flagshop_hsctf/BlindNotWorking.png)
 
 We will have to take advantage of this behavior, performing a small brute force to reconstruct the flag character by character. We can now start to construct our payload.
 
