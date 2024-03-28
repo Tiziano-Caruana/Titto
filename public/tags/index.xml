@@ -2,31 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Tiziano Caruana</title>
-    <link>https://Tiziano-Caruana.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Tiziano Caruana</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 14 Jul 2023 22:20:00 +0200</lastBuildDate>
-    <atom:link href="https://Tiziano-Caruana.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Mar 2024 22:20:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CTFs</title>
-      <link>https://Tiziano-Caruana.github.io/tags/ctfs/</link>
-      <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/tags/ctfs/</guid>
+      <link>http://localhost:1313/tags/ctfs/</link>
+      <pubDate>Wed, 27 Mar 2024 22:20:00 +0200</pubDate>
+      <guid>http://localhost:1313/tags/ctfs/</guid>
       <description></description>
     </item>
     <item>
-      <title>Hsctf-2023</title>
-      <link>https://Tiziano-Caruana.github.io/tags/hsctf-2023/</link>
-      <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/tags/hsctf-2023/</guid>
+      <title>Openecsc-2024</title>
+      <link>http://localhost:1313/tags/openecsc-2024/</link>
+      <pubDate>Wed, 27 Mar 2024 22:20:00 +0200</pubDate>
+      <guid>http://localhost:1313/tags/openecsc-2024/</guid>
       <description></description>
     </item>
     <item>
       <title>Writeup</title>
-      <link>https://Tiziano-Caruana.github.io/tags/writeup/</link>
+      <link>http://localhost:1313/tags/writeup/</link>
+      <pubDate>Wed, 27 Mar 2024 22:20:00 +0200</pubDate>
+      <guid>http://localhost:1313/tags/writeup/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Lactf-2024</title>
+      <link>http://localhost:1313/tags/lactf-2024/</link>
+      <pubDate>Sun, 18 Feb 2024 22:20:00 +0200</pubDate>
+      <guid>http://localhost:1313/tags/lactf-2024/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hsctf-2023</title>
+      <link>http://localhost:1313/tags/hsctf-2023/</link>
       <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/tags/writeup/</guid>
+      <guid>http://localhost:1313/tags/hsctf-2023/</guid>
       <description></description>
     </item>
   </channel>

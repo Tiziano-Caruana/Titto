@@ -2,101 +2,121 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://Tiziano-Caruana.github.io/tags/ctfs/</loc>
-    <lastmod>2023-07-14T22:20:00+02:00</lastmod>
+    <loc>http://localhost:1313/tags/ctfs/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/</loc>
-    <lastmod>2023-07-14T22:20:00+02:00</lastmod>
+    <loc>http://localhost:1313/tags/openecsc-2024/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/tags/hsctf-2023/</loc>
-    <lastmod>2023-07-14T22:20:00+02:00</lastmod>
+    <loc>http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/posts/</loc>
-    <lastmod>2023-07-14T22:20:00+02:00</lastmod>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/tags/</loc>
-    <lastmod>2023-07-14T22:20:00+02:00</lastmod>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="https://Tiziano-Caruana.github.io/it/tags/"
+                href="http://localhost:1313/it/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Tiziano-Caruana.github.io/tags/"
+                href="http://localhost:1313/tags/"
                 />
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="it"
+                href="http://localhost:1313/it/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/tags/writeup/</loc>
+    <lastmod>2024-03-27T22:20:00+02:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>http://localhost:1313/tags/lactf-2024/</loc>
+    <lastmod>2024-02-18T22:20:00+02:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>http://localhost:1313/posts/writeups/lactf-2024/penguin_login/</loc>
+    <lastmod>2024-02-18T22:20:00+02:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
-    <xhtml:link
-                rel="alternate"
-                hreflang="it"
-                href="https://Tiziano-Caruana.github.io/it/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://Tiziano-Caruana.github.io/"
-                />
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/tags/writeup/</loc>
+    <loc>http://localhost:1313/tags/hsctf-2023/</loc>
     <lastmod>2023-07-14T22:20:00+02:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/about_me/</loc>
+    <loc>http://localhost:1313/about_me/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="https://Tiziano-Caruana.github.io/it/about_me/"
+                href="http://localhost:1313/it/about_me/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Tiziano-Caruana.github.io/about_me/"
+                href="http://localhost:1313/about_me/"
                 />
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="https://Tiziano-Caruana.github.io/it/categories/"
+                href="http://localhost:1313/it/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Tiziano-Caruana.github.io/categories/"
+                href="http://localhost:1313/categories/"
                 />
   </url><url>
-    <loc>https://Tiziano-Caruana.github.io/series/</loc>
+    <loc>http://localhost:1313/series/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="https://Tiziano-Caruana.github.io/it/series/"
+                href="http://localhost:1313/it/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Tiziano-Caruana.github.io/series/"
+                href="http://localhost:1313/series/"
                 />
   </url>
 </urlset>
