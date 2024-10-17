@@ -19,6 +19,4 @@ I firmly believe that theoretical study should be complemented and stimulated by
 
 It's utopian to think that such learning can be applied in a school or university setting, perhaps impractical. That's why I believe it's important for every individual to dedicate themselves without hesitation to their passions outside of school hours. What is taught in schools, in any institution and regarding any subject, is little more than the bare minimum necessary to not be considered completely ignorant of the topics presented.
 
-I would like to share this message with as many people as possible and contribute to helping young people who want to delve into this world as I am trying to do. However, I realize that I lack the technical and pedagogical means, besides "being nobody" in terms of professional experience objectively convertible into trust for a role in education different from the traditional school teacher.
-
-That's why I try to improve with every competition and write writeups whenever I have the opportunity.
+I would like to share this message with as many people as possible to help those who, like me, want to explore the world of cybersecurity. I know I still have a lot to learn, both technically and pedagogically. I'm striving to grow not only by gaining experience in different contexts but also by improving my communication skills and becoming more helpful to others.

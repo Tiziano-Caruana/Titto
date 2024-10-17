@@ -19,6 +19,4 @@ Sono convinto che lo studio teorico vada affiancato e stimolato sia dall'utilizz
 
 È utopico che un apprendimento del genere possa venire applicato in una scuola o in un'università, forse impraticabile. Per questo credo sia importante che ogni ragazzo si dedichi senza remore alle proprie passioni in orario extrascolastico. Ciò che viene impartito nelle scuole, in qualsiasi istituto e relativamente a qualsiasi materia, è poco più del minimo indispensabile necessario per non definirsi un completo estraneo agli argomenti presentati.
 
-Mi piacerebbe condividere con più persone possibile questo messaggio, e contribuire nell'aiutare i ragazzi che vogliano approfondire questo mondo come sto cercando di fare io. Mi rendo però conto di non avere i mezzi tecnici e pedagogici necessari, oltre a "non essere nessuno" a livello di esperienza professionale oggettivamente convertibile in fiducia per un eventuale ruolo educativo diverso dal classico professore scolastico.
-
-Per questo cerco di migliorarmi ad ogni gara e scrivo writeup ogni volta che ne ho l'opportunità.
+Mi piacerebbe condividere questo messaggio con quante più persone possibile, per aiutare chi, come me, vuole esplorare il mondo della cybersecurity. So di avere ancora tanto da imparare sia dal punto di vista tecnico che pedagogico. Cerco di crescere non solo accumulando esperienza in vari contesti, ma anche imparando a comunicare meglio e a essere più d'aiuto agli altri.
