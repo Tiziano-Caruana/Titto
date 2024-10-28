@@ -2,74 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/it/categories/</loc>
+    <loc>https://Tiziano-Caruana.github.io/it/categories/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/categories/"
+                href="https://Tiziano-Caruana.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="http://localhost:1313/it/categories/"
+                href="https://Tiziano-Caruana.github.io/it/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/it/about_me/</loc>
+    <loc>https://Tiziano-Caruana.github.io/it/about_me/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/about_me/"
+                href="https://Tiziano-Caruana.github.io/about_me/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="http://localhost:1313/it/about_me/"
+                href="https://Tiziano-Caruana.github.io/it/about_me/"
                 />
   </url><url>
-    <loc>http://localhost:1313/it/series/</loc>
+    <loc>https://Tiziano-Caruana.github.io/it/series/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/series/"
+                href="https://Tiziano-Caruana.github.io/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="http://localhost:1313/it/series/"
+                href="https://Tiziano-Caruana.github.io/it/series/"
                 />
   </url><url>
-    <loc>http://localhost:1313/it/tags/</loc>
+    <loc>https://Tiziano-Caruana.github.io/it/tags/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/tags/"
+                href="https://Tiziano-Caruana.github.io/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="http://localhost:1313/it/tags/"
+                href="https://Tiziano-Caruana.github.io/it/tags/"
                 />
   </url><url>
-    <loc>http://localhost:1313/it/</loc>
+    <loc>https://Tiziano-Caruana.github.io/it/</loc>
     <changefreq>daily</changefreq>
     <priority>1</priority>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/"
+                href="https://Tiziano-Caruana.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="it"
-                href="http://localhost:1313/it/"
+                href="https://Tiziano-Caruana.github.io/it/"
                 />
   </url>
 </urlset>
