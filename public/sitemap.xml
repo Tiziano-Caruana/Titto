@@ -2,14 +2,14 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <sitemap>
-    <loc>https://Tiziano-Caruana.github.io/en/sitemap.xml</loc>
+    <loc>http://localhost:1313/en/sitemap.xml</loc>
     
       <lastmod>2024-03-27T22:20:00+02:00</lastmod>
     
   </sitemap>
   
   <sitemap>
-    <loc>https://Tiziano-Caruana.github.io/it/sitemap.xml</loc>
+    <loc>http://localhost:1313/it/sitemap.xml</loc>
     
   </sitemap>
   

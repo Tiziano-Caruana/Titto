@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>CTFs on Tiziano Caruana</title>
-    <link>https://Tiziano-Caruana.github.io/tags/ctfs/</link>
+    <link>http://localhost:1313/tags/ctfs/</link>
     <description>Recent content in CTFs on Tiziano Caruana</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Wed, 27 Mar 2024 22:20:00 +0200</lastBuildDate>
-    <atom:link href="https://Tiziano-Caruana.github.io/tags/ctfs/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/ctfs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Perfect Shop - OpenECSC 2024</title>
-      <link>https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/</link>
+      <link>http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/</link>
       <pubDate>Wed, 27 Mar 2024 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/</guid>
+      <guid>http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/</guid>
       <description>Performing a static analysis only to find out that... the vulnerability is somewhere else!</description>
     </item>
     <item>
       <title>Penguin Login - LACTF 2024</title>
-      <link>https://Tiziano-Caruana.github.io/posts/writeups/lactf-2024/penguin_login/</link>
+      <link>http://localhost:1313/posts/writeups/lactf-2024/penguin_login/</link>
       <pubDate>Sun, 18 Feb 2024 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/posts/writeups/lactf-2024/penguin_login/</guid>
+      <guid>http://localhost:1313/posts/writeups/lactf-2024/penguin_login/</guid>
       <description>Constructing a custom payload to bypass filters with the help of documentations</description>
     </item>
     <item>
       <title>Flag Shop - HSCTF 2023</title>
-      <link>https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/</link>
+      <link>http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/</link>
       <pubDate>Fri, 14 Jul 2023 22:20:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/</guid>
+      <guid>http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/</guid>
       <description>Building a custom Python payload to exploit a server-side JavaScript injection vulnerability</description>
     </item>
   </channel>

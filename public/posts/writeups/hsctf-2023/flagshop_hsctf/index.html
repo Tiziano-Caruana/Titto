@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="writeup, CTFs, hsctf-2023">
 <meta name="description" content="Building a custom Python payload to exploit a server-side JavaScript injection vulnerability">
 <meta name="author" content="">
-<link rel="canonical" href="https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/">
+<link rel="canonical" href="http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/">
 <meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
-<link rel="icon" type="image/png" sizes="16x16" href="https://Tiziano-Caruana.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://Tiziano-Caruana.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://Tiziano-Caruana.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://Tiziano-Caruana.github.io/safari-pinned-tab.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,7 +59,7 @@
 </noscript><meta property="og:title" content="Flag Shop - HSCTF 2023" />
 <meta property="og:description" content="Building a custom Python payload to exploit a server-side JavaScript injection vulnerability" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-07-14T22:20:00+02:00" />
 <meta property="article:modified_time" content="2023-07-14T22:20:00+02:00" />
 
@@ -77,13 +77,13 @@
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://Tiziano-Caruana.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Flag Shop - HSCTF 2023",
-      "item": "https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/"
+      "item": "http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/"
     }
   ]
 }
@@ -105,7 +105,7 @@
   "dateModified": "2023-07-14T22:20:00+02:00",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://Tiziano-Caruana.github.io/posts/writeups/hsctf-2023/flagshop_hsctf/"
+    "@id": "http://localhost:1313/posts/writeups/hsctf-2023/flagshop_hsctf/"
   },
   "publisher": {
     "@type": "Organization",
@@ -134,7 +134,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://Tiziano-Caruana.github.io/" accesskey="h" title="Tiziano Caruana (Alt + H)">Tiziano Caruana</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Tiziano Caruana (Alt + H)">Tiziano Caruana</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -158,7 +158,7 @@
                 </button>
                 <ul class="lang-switch"><li>|</li>
                     <li>
-                        <a href="https://Tiziano-Caruana.github.io/it/" title="Italiano"
+                        <a href="http://localhost:1313/it/" title="Italiano"
                             aria-label="Italiano">Italiano</a>
                     </li>
                 </ul>
@@ -166,17 +166,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://Tiziano-Caruana.github.io/about_me" title="About me">
+                <a href="http://localhost:1313/about_me" title="About me">
                     <span>About me</span>
                 </a>
             </li>
             <li>
-                <a href="https://Tiziano-Caruana.github.io/tags/blog" title="Blog">
+                <a href="http://localhost:1313/tags/blog" title="Blog">
                     <span>Blog</span>
                 </a>
             </li>
             <li>
-                <a href="https://Tiziano-Caruana.github.io/tags/writeup" title="Writeup">
+                <a href="http://localhost:1313/tags/writeup" title="Writeup">
                     <span>Writeup</span>
                 </a>
             </li>
@@ -187,7 +187,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://Tiziano-Caruana.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://Tiziano-Caruana.github.io/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Flag Shop - HSCTF 2023
     </h1>
@@ -359,17 +359,17 @@ The website appears to be very simple, and the source code is quite short:</p>
 <p>With <code>');</code> we escaped the string and closed the statement, giving us an <!-- raw HTML omitted -->SSJI<!-- raw HTML omitted -->. All that&rsquo;s left is to get rid of the extra <code>')'</code> at the end. I wasn&rsquo;t able to do this (and I don&rsquo;t think it was possible, but it certainly wasn&rsquo;t necessary) since I couldn&rsquo;t use comments. So, I went full monkey mode and just copied the previous function, forming a first test payload:</p>
 <p><code>'); this.challenge.includes('</code>, interpreted as <code>this.challenge.includes(''); this.challenge.includes('')</code> by the program. The output is what we expected and desired, which is to return all results (like a <code>' OR 1=1</code>).</p>
 <p>By testing or reading the documentation, we can discover that this happens because only the last valid condition is computed by the $where clause. This means that we can write anything in the first <code>include</code>, since it won&rsquo;t be interpreted (<code>something'); this.challenge.includes('</code>):</p>
-<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp1.png" alt="Burp Suite screenshot showing the result of a request sent with the payload (&lt;code&gt;something&#39;); this.challenge.includes(&#39;&lt;/code&gt;), which returns all the results from the database"  />
+<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp1.png" alt="Burp Suite screenshot showing the result of a request sent with the payload (something&#39;); this.challenge.includes(&#39;), which returns all the results from the database"  />
 </p>
 <p>While the second one is interpreted (<code>something'); this.challenge.includes('search</code>):</p>
-<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp2.png" alt="Burp Suite screenshot showing that if we include a search parameter in the injected &amp;lsquo;include&amp;rsquo;, the query will execute it"  />
+<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp2.png" alt="Burp Suite screenshot showing that if we include a search parameter in the injected &lsquo;include&rsquo;, the query will execute it"  />
 </p>
 <p>So we have the vulnerability, but we cannot directly retrieve the flag since it is excluded from the query (if you&rsquo;re not sure, please reread the source code).
 I then tried a payload with a boolean operator (<code>something'); always_true() || this.challenge.includes('something</code>):</p>
-<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp3.png" alt="Burp Suite screenshot showing all challenges result after including an &amp;lsquo;or 1==1&amp;rsquo; before the injected search parameter"  />
+<p><img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/burp3.png" alt="Burp Suite screenshot showing all challenges result after including an &lsquo;or 1==1&rsquo; before the injected search parameter"  />
 </p>
 <p>This is very useful for searching for a potential attack. We can perform a conditional check on the flag using <code>&amp;&amp; this.challenge.includes('flag')</code> to only get results from the <code>flag-shop</code> entity. We can do a first test with the flag format (<code>something'); this.flag.includes('flag{') &amp;&amp; this.challenge.includes('flag</code>):
-<img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/FirstBlind.png" alt="Burp Suite screenshot showing result including &amp;lsquo;flag{&amp;rsquo;"  />
+<img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/FirstBlind.png" alt="Burp Suite screenshot showing result including &lsquo;flag{&rsquo;"  />
 
 <img loading="lazy" src="/writeups/hsctf-2023/flagshop_hsctf/BlindNotWorking.png" alt="Burp Suite screenshot showing no result after including a random word as search parameter"  />
 </p>
@@ -450,16 +450,16 @@ I then tried a payload with a boolean operator (<code>something'); always_true()
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://Tiziano-Caruana.github.io/tags/writeup/">Writeup</a></li>
-      <li><a href="https://Tiziano-Caruana.github.io/tags/ctfs/">CTFs</a></li>
-      <li><a href="https://Tiziano-Caruana.github.io/tags/hsctf-2023/">Hsctf-2023</a></li>
+      <li><a href="http://localhost:1313/tags/writeup/">Writeup</a></li>
+      <li><a href="http://localhost:1313/tags/ctfs/">CTFs</a></li>
+      <li><a href="http://localhost:1313/tags/hsctf-2023/">Hsctf-2023</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-    <span>&copy; 2024 <a href="https://Tiziano-Caruana.github.io/">Tiziano Caruana</a></span>
+    <span>&copy; 2024 <a href="http://localhost:1313/">Tiziano Caruana</a></span>
     <span>
         Powered by
         <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
