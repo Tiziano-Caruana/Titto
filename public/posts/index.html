@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <link rel="canonical" href="https://Tiziano-Caruana.github.io/posts/">
 <meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.fc220c15db4aef0318bbf30adc45d33d4d7c88deff3238b23eb255afdc472ca6.css" integrity="sha256-/CIMFdtK7wMYu/MK3EXTPU18iN7/MjiyPrJVr9xHLKY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
 <link rel="icon" type="image/png" sizes="16x16" href="https://Tiziano-Caruana.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://Tiziano-Caruana.github.io/favicon-32x32.png">
@@ -21,6 +21,7 @@
 <meta name="msapplication-TileColor" content="#2e2e33">
 <link rel="alternate" type="application/rss+xml" href="https://Tiziano-Caruana.github.io/posts/index.xml">
 <link rel="alternate" hreflang="en" href="https://Tiziano-Caruana.github.io/posts/">
+<link rel="alternate" hreflang="it" href="https://Tiziano-Caruana.github.io/it/posts/">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,14 +58,15 @@
         }
 
     </style>
-</noscript><meta property="og:title" content="Posts" />
-<meta property="og:description" content="Tiziano Caruana&#39;s personal website" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Posts"/>
-<meta name="twitter:description" content="Tiziano Caruana&#39;s personal website"/>
+</noscript><meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/">
+  <meta property="og:site_name" content="Tiziano Caruana">
+  <meta property="og:title" content="Posts">
+  <meta property="og:description" content="Tiziano Caruana&#39;s personal website">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Posts">
+<meta name="twitter:description" content="Tiziano Caruana&#39;s personal website">
 
 
 <script type="application/ld+json">
@@ -164,6 +166,20 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Timeline Team Mashers Cybersecurity Awareness Communication Challenge (CAC²) CSAW
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Background CSAW is an annual cybersecurity event started in 2003 at New York University. Each year, it’s organized thanks to the efforts of students from around the globe. In Europe, the hosting institution is “INP - Esisar” in Valence, France.
+This year, alongside various conferences and competitions, the Cybersecurity Awareness Communication Challenge (CAC²) made its debut—a competition aimed at creating a communication strategy to raise cybersecurity awareness among a non-technical audience.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2024-11-17 18:00:00 +0200 +0200'>November 17, 2024</span>&nbsp;·&nbsp;11 min&nbsp;·&nbsp;2221 words</footer>
+  <a class="entry-link" aria-label="post link to Timeline Team Mashers Cybersecurity Awareness Communication Challenge (CAC²) CSAW" href="https://Tiziano-Caruana.github.io/posts/blog/csaw2024/csaw_cac/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Perfect Shop - OpenECSC 2024
     </h2>
   </header>
@@ -189,6 +205,7 @@ However, fortunately, the code is relatively short and not very verbose, and all
 “I got tired of people leaking my password from the db so I moved it out of the db.”
 Prior knowledge: basic web-related knowledge, SQL
 Context We are provided with the link to the challenge website and the corresponding source code. The website is quite simple, and the usage of its features is straightforward: All the code is in app.py:
+... allowed_chars = set(string.ascii_letters &#43; string.digits &#43; &#34; &#39;flag{a_word}&#39;&#34;) forbidden_strs = [&#34;like&#34;] @cache def get_database_connection(): # Get database credentials from environment variables db_user = os.environ.get(&#34;POSTGRES_USER&#34;) db_password = os.environ.get(&#34;POSTGRES_PASSWORD&#34;) db_host = &#34;db&#34; # Establish a connection to the PostgreSQL database connection = psycopg2.connect(user=db_user, password=db_password, host=db_host) return connection with app.app_context(): conn = get_database_connection() create_sql = &#34;&#34;&#34; DROP TABLE IF EXISTS penguins; CREATE TABLE IF NOT EXISTS penguins ( name TEXT ) &#34;&#34;&#34; with conn.cursor() as curr: curr.execute(create_sql) curr.execute(&#34;SELECT COUNT(*) FROM penguins&#34;) if curr.fetchall()[0][0] == 0: curr.execute(&#34;INSERT INTO penguins (name) VALUES (&#39;peng&#39;)&#34;) curr.execute(&#34;INSERT INTO penguins (name) VALUES (&#39;emperor&#39;)&#34;) curr.execute(&#34;INSERT INTO penguins (name) VALUES (&#39;%s&#39;)&#34; % (flag)) conn.commit() @app.post(&#34;/submit&#34;) def submit_form(): try: username = request.form[&#34;username&#34;] conn = get_database_connection() assert all(c in allowed_chars for c in username), &#34;no character for u uwu&#34; assert all( forbidden not in username.lower() for forbidden in forbidden_strs ), &#34;no word for u uwu&#34; with conn.cursor() as curr: curr.execute(&#34;SELECT * FROM penguins WHERE name = &#39;%s&#39;&#34; % username) result = curr.fetchall() if len(result): return &#34;We found a penguin!!!!!&#34;, 200 return &#34;No penguins sadg&#34;, 201 except Exception as e: return f&#34;Error: {str(e)}&#34;, 400 # need to commit to avoid connection going bad in case of error finally: conn.commit() ... We know that the website uses Postgres as the RDBMS/SQL database, and that the flag is contained in the penguins table along with the penguins.
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2024-02-18 22:20:00 +0200 +0200'>February 18, 2024</span>&nbsp;·&nbsp;9 min&nbsp;·&nbsp;1752 words</footer>

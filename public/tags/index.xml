@@ -4,10 +4,38 @@
     <title>Tags on Tiziano Caruana</title>
     <link>https://Tiziano-Caruana.github.io/tags/</link>
     <description>Recent content in Tags on Tiziano Caruana</description>
-    <generator>Hugo -- 0.136.5</generator>
+    <generator>Hugo -- 0.138.0</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 27 Mar 2024 22:20:00 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 17 Nov 2024 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://Tiziano-Caruana.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Blog</title>
+      <link>https://Tiziano-Caruana.github.io/tags/blog/</link>
+      <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
+      <guid>https://Tiziano-Caruana.github.io/tags/blog/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CaC²</title>
+      <link>https://Tiziano-Caruana.github.io/tags/cac/</link>
+      <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
+      <guid>https://Tiziano-Caruana.github.io/tags/cac/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Csaw2024</title>
+      <link>https://Tiziano-Caruana.github.io/tags/csaw2024/</link>
+      <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
+      <guid>https://Tiziano-Caruana.github.io/tags/csaw2024/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>On-Site</title>
+      <link>https://Tiziano-Caruana.github.io/tags/on-site/</link>
+      <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
+      <guid>https://Tiziano-Caruana.github.io/tags/on-site/</guid>
+      <description></description>
+    </item>
     <item>
       <title>CTFs</title>
       <link>https://Tiziano-Caruana.github.io/tags/ctfs/</link>

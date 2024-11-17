@@ -4,10 +4,17 @@
     <title>Tiziano Caruana</title>
     <link>https://Tiziano-Caruana.github.io/</link>
     <description>Recent content on Tiziano Caruana</description>
-    <generator>Hugo -- 0.136.5</generator>
+    <generator>Hugo -- 0.138.0</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 27 Mar 2024 22:20:00 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 17 Nov 2024 18:00:00 +0200</lastBuildDate>
     <atom:link href="https://Tiziano-Caruana.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Timeline Team Mashers Cybersecurity Awareness Communication Challenge (CAC²) CSAW</title>
+      <link>https://Tiziano-Caruana.github.io/posts/blog/csaw2024/csaw_cac/</link>
+      <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
+      <guid>https://Tiziano-Caruana.github.io/posts/blog/csaw2024/csaw_cac/</guid>
+      <description>A brief, straightforward account of how to win a CSAW competition and enjoy Valence, France.</description>
+    </item>
     <item>
       <title>Perfect Shop - OpenECSC 2024</title>
       <link>https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/</link>

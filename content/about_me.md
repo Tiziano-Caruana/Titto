@@ -11,9 +11,9 @@ sitemap:
 
 # About me
 
-I'm currently delving into the world of web security, primarily through Capture The Flag (CTF) competitions with my team, TRX, and various platforms offering diverse challenges on the subject.
+Currently, I am delving deeper into the world of cybersecurity. After competing in CTFs with the TRX team for two years, I’ve started participating in other types of cybersecurity competitions, exploring the communicative side and gaining insights into typical attacker behavior.
 
-I often enjoy writing writeups on challenges that I found fun or interesting for some reason. I dedicate several hours to their drafting, striving to make them as understandable as possible even for inexperienced individuals who have only a vague idea of how the internet works.
+Whenever I can, I enjoy writing blog posts and articles, whether for the communities I'm part of or to participate in a new competition. I believe that by dedicating several hours to creating high-quality content, I can make my work as informed and understandable as possible, even for people who only have a vague idea of how internet systems and actors operate.
 
 I firmly believe that theoretical study should be complemented and stimulated by both practical application of skills and the presentation of compelling stories and current events. I think that people are more likely to grasp even complex technical concepts if they help better understand the workings of infrastructures and systems that have recently been victims of attacks or errors.
 

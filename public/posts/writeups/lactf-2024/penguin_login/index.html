@@ -11,7 +11,7 @@
 <meta name="author" content="">
 <link rel="canonical" href="https://Tiziano-Caruana.github.io/posts/writeups/lactf-2024/penguin_login/">
 <meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.fc220c15db4aef0318bbf30adc45d33d4d7c88deff3238b23eb255afdc472ca6.css" integrity="sha256-/CIMFdtK7wMYu/MK3EXTPU18iN7/MjiyPrJVr9xHLKY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
 <link rel="icon" type="image/png" sizes="16x16" href="https://Tiziano-Caruana.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://Tiziano-Caruana.github.io/favicon-32x32.png">
@@ -56,16 +56,21 @@
         }
 
     </style>
-</noscript><meta property="og:title" content="Penguin Login - LACTF 2024" />
-<meta property="og:description" content="Constructing a custom payload to bypass filters with the help of documentations" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/lactf-2024/penguin_login/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-02-18T22:20:00+02:00" />
-<meta property="article:modified_time" content="2024-02-18T22:20:00+02:00" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Penguin Login - LACTF 2024"/>
-<meta name="twitter:description" content="Constructing a custom payload to bypass filters with the help of documentations"/>
+</noscript><meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/lactf-2024/penguin_login/">
+  <meta property="og:site_name" content="Tiziano Caruana">
+  <meta property="og:title" content="Penguin Login - LACTF 2024">
+  <meta property="og:description" content="Constructing a custom payload to bypass filters with the help of documentations">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-02-18T22:20:00+02:00">
+    <meta property="article:modified_time" content="2024-02-18T22:20:00+02:00">
+    <meta property="article:tag" content="Writeup">
+    <meta property="article:tag" content="CTFs">
+    <meta property="article:tag" content="Lactf-2024">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Penguin Login - LACTF 2024">
+<meta name="twitter:description" content="Constructing a custom payload to bypass filters with the help of documentations">
 
 
 <script type="application/ld+json">
@@ -253,8 +258,7 @@
 <p><em>Prior knowledge: basic web-related knowledge, SQL</em></p>
 <h2 id="context">Context<a hidden class="anchor" aria-hidden="true" href="#context">#</a></h2>
 <p>We are provided with the link to the challenge website and the corresponding source code. The website is quite simple, and the usage of its features is straightforward:
-<img loading="lazy" src="/writeups/lactf-2024/penguin-login/img/website.png" alt="website home page"  />
-</p>
+<img alt="website home page" loading="lazy" src="/writeups/lactf-2024/penguin-login/img/website.png"></p>
 <p>All the code is in <code>app.py</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">...</span>
 </span></span><span style="display:flex;"><span>allowed_chars <span style="color:#f92672">=</span> set(string<span style="color:#f92672">.</span>ascii_letters <span style="color:#f92672">+</span> string<span style="color:#f92672">.</span>digits <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#39;flag</span><span style="color:#e6db74">{a_word}</span><span style="color:#e6db74">&#39;&#34;</span>)
@@ -322,10 +326,8 @@
 <p>The code is straightforward: the first half deals only with connections and setup, while the <code>submit</code> endpoint checks that the characters entered by the user are part of the whitelist (letters, numbers, <code>{}</code>, and <code>_</code>), which effectively consists of the characters that can be part of the flag.</p>
 <h2 id="the-ideal-thought-process">The ideal thought process<a hidden class="anchor" aria-hidden="true" href="#the-ideal-thought-process">#</a></h2>
 <p>A quick analysis of the code can already tell us everything we need to know, but why not play around with the only input available on the site?</p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/code200.gif" alt="code 200 example"  />
-</p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/code201.gif" alt="code 201 example"  />
-</p>
+<p><img alt="code 200 example" loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/code200.gif"></p>
+<p><img alt="code 201 example" loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/code201.gif"></p>
 <p>We can thus see the differences in response depending on the input. If a penguin is found, a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">status code</a> is returned, while if nothing is found, we get a 201.</p>
 <p>As we can see in line 63, the query is constructed using string interpolation with <a href="https://www.programiz.com/python-programming/string-interpolation#:~:text=Example%203">%-formatting</a> which allows for user input. This approach is vulnerable to <a href="https://stackoverflow.com/questions/51960654/python-string-formatting-percentage-symbol-after-string-substituion">SQL injection</a>, and the challenge author has simulated a makeshift solution through a system of <a href="https://www.ninjaone.com/it-hub/endpoint-security/what-is-input-sanitization/#:~:text=Input%20sanitization%20methods">whitelisting e blacklisting</a>.</p>
 <h3 id="exploiting-the-vulnerability">Exploiting the vulnerability<a hidden class="anchor" aria-hidden="true" href="#exploiting-the-vulnerability">#</a></h3>
@@ -333,8 +335,7 @@
 In this case, it&rsquo;s not a tragedy, since we only need to get rid of one apostrophe. We just need to close the payloads with a string. This means that instead of using the classic logic SQLi test <code>' OR 1=1</code>, we&rsquo;ll use its alternative <code>' OR 'a'='a'</code>, without the final apostrophe since we&rsquo;ll use the last &lsquo;a&rsquo; to &ldquo;burn&rdquo; the extra apostrophe present in the code.</p>
 <p>Nice thinking, the problem is that the equal sign is not whitelisted. We can&rsquo;t even use <code>LIKE</code> instead of the equal sign, since it&rsquo;s blacklisted.</p>
 <p>In SQL, we can indicate boolean values with 0 and 1, and this applies even if they are strings. So, just like <code>' OR 1</code> returns <code>TRUE</code>, so does <code>' OR '1</code>.</p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/injTest.gif" alt="First injection test"  />
-</p>
+<p><img alt="First injection test" loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/injTest.gif"></p>
 <p>It works! Now we just have to adjust the injection in order to exfiltrate the flag.</p>
 <p>But there&rsquo;s no way to use <code>LIKE</code> (I&rsquo;m not completely sure about this one, but I did not use it. P.S. Yeah, it wasn&rsquo;t intended to use LIKE by bypassing the blacklist). Searching on the internet for <em>LIKE alternative in postgreSQL</em>, among the top results, I found sections <a href="https://www.postgresql.org/docs/7.3/functions-matching.html#:~:text=6.6.%20Pattern%20Matching">6.6</a> and <a href="https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-MATCHING">9.7</a> of the documentation, both concerning pattern matching. In these parts of the documentation, an alternative to the <code>LIKE</code> statement is indicated, namely <code>SIMILAR TO</code>, which differs from the former only in the interpretation of RegEx. For our purposes, there is no difference.</p>
 <p>At this point, we have practically won, and all that&rsquo;s left is to build the payload and the corresponding script. Probably SQLmap already had something available for the occasion, but I don&rsquo;t really care.</p>
@@ -343,14 +344,12 @@ In this case, it&rsquo;s not a tragedy, since we only need to get rid of one apo
 <h5 id="copying-the-vulnerable-line-and-playing-with-it">Copying the vulnerable line, and playing with it<a hidden class="anchor" aria-hidden="true" href="#copying-the-vulnerable-line-and-playing-with-it">#</a></h5>
 <p>In the line <code>&quot;SELECT * FROM penguins WHERE name = '%s'&quot; % username</code>, our input is directly inserted in place of <code>%s</code>. To ensure that you are writing a sensible payload, you can first try writing it in place of the placeholder:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> penguins <span style="color:#66d9ef">WHERE</span> name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#66d9ef">OR</span> <span style="color:#e6db74">&#39;1&#39;</span>
-</span></span></code></pre></div><p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/PlayTest.gif" alt="Example of the just presented &ldquo;technique&rdquo;"  />
-</p>
+</span></span></code></pre></div><p><img alt="Example of the just presented &ldquo;technique&rdquo;" loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/PlayTest.gif"></p>
 <p>Make sure not to use the mouse or arrow keys (in other words, don&rsquo;t move the cursor) while you&rsquo;re testing your inputs ;)</p>
 <h5 id="understanding-if-the-payload-makes-sense">Understanding if the payload makes sense<a hidden class="anchor" aria-hidden="true" href="#understanding-if-the-payload-makes-sense">#</a></h5>
 <p>Instead of blindly using a command/trick/workaround/technique that you see for the first time, make sure first that it works as you imagine in a more &ldquo;relaxed&rdquo; context, where you can write and access outputs and error logs without limitations. Discovering that the query returned <code>false</code> because you were not running the command correctly, or that it errored because the command was related to another DBMS, is particularly frustrating.</p>
 <p>There are services (like <a href="https://onecompiler.com/postgresql/">OneCompiler</a>, that allow you to execute code directly online. Always make sure 100% when using these services that you have selected the right DBMS.</p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/img/OnlineExample.png" alt="Example of using OneCompiler to verify the result of an unconventional query"  />
-</p>
+<p><img alt="Example of using OneCompiler to verify the result of an unconventional query" loading="lazy" src="/writeups/lactf-2024/penguin-login/img/OnlineExample.png"></p>
 <h5 id="proceed-in-phases">Proceed in phases<a hidden class="anchor" aria-hidden="true" href="#proceed-in-phases">#</a></h5>
 <p>It&rsquo;s helpful to reason in phases the first few times. In mathematics, we can start skipping steps during calculations, but only because we&rsquo;ve become familiar enough:</p>
 <ul>
@@ -409,11 +408,9 @@ In this case, it&rsquo;s not a tragedy, since we only need to get rid of one apo
 </span></span><span style="display:flex;"><span>        payloadStart <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;_&#34;</span>
 </span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;skipping: &#34;</span>, payload)
 </span></span></code></pre></div><p>Due to infrastructure issues, the first character of the flag couldn&rsquo;t be retrieved. I had to guess it (in quite a few attempts xd). P.S. It seems like there was a way to exfiltrate the first character of the flag. I&rsquo;ll act like I didn&rsquo;t see that.</p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/FinalPayload.gif" alt="Execution of the final script"  />
-</p>
+<p><img alt="Execution of the final script" loading="lazy" src="/writeups/lactf-2024/penguin-login/vid/FinalPayload.gif"></p>
 <p><code>lactf{90stgr35_3s_n0t_l7k3_th3_0th3r_dbs_0w0}</code></p>
-<p><img loading="lazy" src="/writeups/lactf-2024/penguin-login/img/InterestingTicket.png" alt="Extract from an interesting conversation had in a ticket"  />
-</p>
+<p><img alt="Extract from an interesting conversation had in a ticket" loading="lazy" src="/writeups/lactf-2024/penguin-login/img/InterestingTicket.png"></p>
 <h3 id="how-it-actually-went-during-the-ctf">How it actually went during the CTF<a hidden class="anchor" aria-hidden="true" href="#how-it-actually-went-during-the-ctf">#</a></h3>
 <p>One evening, I was at the gym to vent the frustration of not being able to find a rock on the west coast of California, United States (I love OSINT). Just before leaving, I heard that one of my teammates was having a bad time with an SQLi. &ldquo;Let me solve it,&rdquo; I wrote to him.</p>
 <p>I hadn&rsquo;t read the code yet when I received a message on Discord from said player, expressing interest in solving the challenge. &ldquo;Just use <code>_</code>&rdquo;, I said jokingly. I didn&rsquo;t know that the character was actually whitelisted.</p>

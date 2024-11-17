@@ -11,9 +11,9 @@ sitemap:
 
 # Su di me
 
-Attualmente sto approfondendo il mondo della sicurezza web soprattutto grazie alle CTF alle quali partecipo con i TRX e alle varie piattaforme che propongo diverse challenge sul tema. 
+Attualmente sto approfondendo il mondo della sicurezza informatica. Dopo aver giocato per 2 anni CTF con i TRX, ho iniziato a partecipare ad altri tipi di concorsi del settore, iniziando a sperimentare anche nel lato comunicativo ed approfondendo il comportamento tipico degli attaccanti.
 
-Mi diletto spesso e volentieri nello scrivere writeup sulle challenge che per qualche motivo ho trovato divertenti o interessanti. Dedico diverse ore alla loro stesura, e cerco di renderle quanto più possibile comprensibili anche per persone inesperte che hanno solo una vaga idea del funzionamento del mondo di internet.
+Quando posso mi diletto nella scrittura di blog post e articoli, che sia per le comunità di cui faccio parte o per partecipare ad una nuova competizione. Credo che dedicando diverse ore alla stesura di contenuti di qualità possa riuscire a rendere i miei contenuti quanto più informati e comprensibili possibile, anche per persone inesperte che hanno solo una vaga idea di come funzionino i sistemi e gli attori coinvolti nel mondo di internet.
 
 Sono convinto che lo studio teorico vada affiancato e stimolato sia dall'utilizzo pratico delle competenze, sia dalla presentazione di storie interessanti e notizie di attualità. Credo che si sia più propensi a comprendere concetti tecnici anche complessi se questi possono aiutare nel capire meglio il funzionamento di infrastrutture e sistemi che di recente sono stati vittime di attacchi o errori.
 
