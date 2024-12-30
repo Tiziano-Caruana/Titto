@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Studying on Tiziano Caruana</title>
+    <link>http://localhost:1313/tags/studying/</link>
+    <description>Recent content in Studying on Tiziano Caruana</description>
+    <generator>Hugo -- 0.140.1</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 25 Dec 2024 01:00:00 +0200</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/studying/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My journey in learning Japanese and keep up with university - week 0</title>
+      <link>http://localhost:1313/posts/blog/learningjp_week0/learningjp_week0/</link>
+      <pubDate>Wed, 25 Dec 2024 01:00:00 +0200</pubDate>
+      <guid>http://localhost:1313/posts/blog/learningjp_week0/learningjp_week0/</guid>
+      <description>The weekly diary of your local nerd. Currently starting the tough journey of learning Japanese while not skipping my following exams 😵‍💫</description>
+    </item>
+  </channel>
+</rss>

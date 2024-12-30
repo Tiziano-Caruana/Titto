@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>On-Site on Tiziano Caruana</title>
-    <link>https://Tiziano-Caruana.github.io/it/tags/on-site/</link>
+    <link>http://localhost:1313/it/tags/on-site/</link>
     <description>Recent content in On-Site on Tiziano Caruana</description>
-    <generator>Hugo -- 0.138.0</generator>
+    <generator>Hugo -- 0.140.1</generator>
     <language>it</language>
     <lastBuildDate>Sun, 17 Nov 2024 18:00:00 +0200</lastBuildDate>
-    <atom:link href="https://Tiziano-Caruana.github.io/it/tags/on-site/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/it/tags/on-site/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Timeline Team Mashers Cybersecurity Awareness Communication Challenge (CAC²) CSAW</title>
-      <link>https://Tiziano-Caruana.github.io/it/posts/blog/csaw2024/csaw_cac/</link>
+      <link>http://localhost:1313/it/posts/blog/csaw2024/csaw_cac/</link>
       <pubDate>Sun, 17 Nov 2024 18:00:00 +0200</pubDate>
-      <guid>https://Tiziano-Caruana.github.io/it/posts/blog/csaw2024/csaw_cac/</guid>
+      <guid>http://localhost:1313/it/posts/blog/csaw2024/csaw_cac/</guid>
       <description>Un breve e diretto diario di come vincere una competizione a CSAW e godersi Valence</description>
     </item>
   </channel>

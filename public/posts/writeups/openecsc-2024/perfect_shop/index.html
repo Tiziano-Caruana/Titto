@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -9,17 +9,17 @@
 <meta name="keywords" content="writeup, CTFs, openecsc-2024">
 <meta name="description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!">
 <meta name="author" content="">
-<link rel="canonical" href="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/">
+<link rel="canonical" href="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/">
 <meta name="google-site-verification" content="-NRlyU37XYTZJ4WyeO8svRuXL8xXbOUAqLrx-qYbEpw">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d6fcd20a4fb86efa4dfac8ec95da60244cc8871042183da1ef28e3a762ad79c8.css" integrity="sha256-1vzSCk&#43;4bvpN&#43;sjsldpgJEzIhxBCGD2h7yjjp2Ktecg=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d72444526d7ecbdb0015438a7fa89054a658bf759d0542e2e5df81ce94b493ee.css" integrity="sha256-1yREUm1&#43;y9sAFUOKf6iQVKZYv3WdBULi5d&#43;BzpS0k&#43;4=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&amp;usqp=CAU">
-<link rel="icon" type="image/png" sizes="16x16" href="https://Tiziano-Caruana.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://Tiziano-Caruana.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://Tiziano-Caruana.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://Tiziano-Caruana.github.io/safari-pinned-tab.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/">
 <noscript>
     <style>
         #theme-toggle,
@@ -56,7 +56,7 @@
         }
 
     </style>
-</noscript><meta property="og:url" content="https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/">
+</noscript><meta property="og:url" content="http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/">
   <meta property="og:site_name" content="Tiziano Caruana">
   <meta property="og:title" content="Perfect Shop - OpenECSC 2024">
   <meta property="og:description" content="Performing a static analysis only to find out that... the vulnerability is somewhere else!">
@@ -82,13 +82,13 @@
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://Tiziano-Caruana.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Perfect Shop - OpenECSC 2024",
-      "item": "https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/"
+      "item": "http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/"
     }
   ]
 }
@@ -110,7 +110,7 @@
   "dateModified": "2024-03-27T22:20:00+02:00",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://Tiziano-Caruana.github.io/posts/writeups/openecsc-2024/perfect_shop/"
+    "@id": "http://localhost:1313/posts/writeups/openecsc-2024/perfect_shop/"
   },
   "publisher": {
     "@type": "Organization",
@@ -139,7 +139,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://Tiziano-Caruana.github.io/" accesskey="h" title="Tiziano Caruana (Alt + H)">Tiziano Caruana</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Tiziano Caruana (Alt + H)">Tiziano Caruana</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -163,7 +163,7 @@
                 </button>
                 <ul class="lang-switch"><li>|</li>
                     <li>
-                        <a href="https://Tiziano-Caruana.github.io/it/" title="Italiano"
+                        <a href="http://localhost:1313/it/" title="Italiano"
                             aria-label="Italiano">Italiano</a>
                     </li>
                 </ul>
@@ -171,17 +171,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://Tiziano-Caruana.github.io/about_me" title="About me">
+                <a href="http://localhost:1313/about_me" title="About me">
                     <span>About me</span>
                 </a>
             </li>
             <li>
-                <a href="https://Tiziano-Caruana.github.io/tags/blog" title="Blog">
+                <a href="http://localhost:1313/tags/blog" title="Blog">
                     <span>Blog</span>
                 </a>
             </li>
             <li>
-                <a href="https://Tiziano-Caruana.github.io/tags/writeup" title="Writeup">
+                <a href="http://localhost:1313/tags/writeup" title="Writeup">
                     <span>Writeup</span>
                 </a>
             </li>
@@ -192,7 +192,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://Tiziano-Caruana.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://Tiziano-Caruana.github.io/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Perfect Shop - OpenECSC 2024
     </h1>
@@ -554,7 +554,7 @@
 <p>Receiving well-crafted Docker Compose files along with the source code of the challenge means being able to easily test locally with a single command and modify the code as needed to better understand the limits of our payloads and the nature of the vulnerabilities of the site being attacked.</p>
 <h3 id="this-challenge">This Challenge<a hidden class="anchor" aria-hidden="true" href="#this-challenge">#</a></h3>
 <h4 id="linux">Linux<a hidden class="anchor" aria-hidden="true" href="#linux">#</a></h4>
-<p>To simply run the challenge, just execute <code>sudo docker compose up</code> in the challenge folder to start all the containers. As indicated in both <code>server.js</code> and the <code>docker-compose.yaml</code> file, the site will be accessible on <a href="https://en.wikipedia.org/wiki/Port_(computer_networking)">port</a> 3000.</p>
+<p>To simply run the challenge, just execute <code>sudo docker compose up</code> in the challenge folder to start all the containers. As indicated in both <code>server.js</code> and the <code>docker-compose.yaml</code> file, the site will be accessible on <a href="https://en.wikipedia.org/wiki/Port_%28computer_networking%29">port</a> 3000.</p>
 <p>If for any reason you need to modify the source code of the challenge, simply make the desired changes, save the file, and then run <code>sudo docker compose build web</code>. In this case, specifying <code>web</code> indicates that only the container related to the web server should be rebuilt, rather than all containers.</p>
 <h4 id="windows">Windows<a hidden class="anchor" aria-hidden="true" href="#windows">#</a></h4>
 <p>Start the Docker Engine. If you have Docker Desktop, simply launch it, and the Engine will start automatically. From the terminal, navigate to the Perfect Shop folder and execute <code>docker compose up</code> to start the challenge locally, and <code>docker compose build web</code> if you wish to apply any changes. Similarly, specifying <code>web</code> indicates that only the container related to the web server should be rebuilt, rather than all containers.</p>
@@ -608,7 +608,7 @@
 <p>Armed with this information, we can move on to the next point.</p>
 <h4 id="traveling-bot">Traveling Bot<a hidden class="anchor" aria-hidden="true" href="#traveling-bot">#</a></h4>
 <p>Yes, there is a discrepancy between the parsed id and the id of the product that will be visited by the bot, but what does it change for us? Leading the bot to <code>http://perfectshop.challs.open.ecsc2024.it/product/1hehJHAHajhajseheja</code> instead of <code>http://perfectshop.challs.open.ecsc2024.it/product/1</code> as expected can be amusing, but nothing more.</p>
-<p>There is a powerful weapon that can be used in these cases, namely <a href="https://www.google.com/search?q=dot+dot+slash+meaning"><code>../</code></a>, which in a path means &ldquo;go up one folder&rdquo;. The same can apply to an endpoint: <code>http://perfectshop.challs.open.ecsc2024.it</code> is equivalent to <code>http://perfectshop.challs.open.ecsc2024.it/product/1/../../</code> (if the concept is not clear, I suggest playing around with it).</p>
+<p>There is a powerful weapon that can be used in these cases, namely <a href="https://www.google.com/search?q=dot&#43;dot&#43;slash&#43;meaning"><code>../</code></a>, which in a path means &ldquo;go up one folder&rdquo;. The same can apply to an endpoint: <code>http://perfectshop.challs.open.ecsc2024.it</code> is equivalent to <code>http://perfectshop.challs.open.ecsc2024.it/product/1/../../</code> (if the concept is not clear, I suggest playing around with it).</p>
 <p>This means that we can send the bot around. In itself, it&rsquo;s not a big deal, but by combining this with the other points mentioned, it&rsquo;s already possible to imagine a chain to create a working exploit, at least on paper. If that&rsquo;s not the case, you&rsquo;re just like me, and it might be useful to proceed by reading&hellip;</p>
 <h3 id="studying-the-target-by-playing-around">Studying the target by playing around<a hidden class="anchor" aria-hidden="true" href="#studying-the-target-by-playing-around">#</a></h3>
 <p><a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> is the art of experimenting and finding out, a technique proven by numerous cybersecurity experts, papers on the subject, and CTFers.</p>
@@ -733,16 +733,16 @@
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://Tiziano-Caruana.github.io/tags/writeup/">Writeup</a></li>
-      <li><a href="https://Tiziano-Caruana.github.io/tags/ctfs/">CTFs</a></li>
-      <li><a href="https://Tiziano-Caruana.github.io/tags/openecsc-2024/">Openecsc-2024</a></li>
+      <li><a href="http://localhost:1313/tags/writeup/">Writeup</a></li>
+      <li><a href="http://localhost:1313/tags/ctfs/">CTFs</a></li>
+      <li><a href="http://localhost:1313/tags/openecsc-2024/">Openecsc-2024</a></li>
     </ul>
   </footer>
 </article>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2024 <a href="https://Tiziano-Caruana.github.io/">Tiziano Caruana</a></span> · 
+        <span>&copy; 2024 <a href="http://localhost:1313/">Tiziano Caruana</a></span> · 
 
     <span>
         Powered by
