@@ -1,6 +1,6 @@
 ---
 title: 'My journey in learning Japanese and keep up with university - week 0'
-date: 2024-12-25T01:00:00+02:00
+date: 2024-12-30T01:00:00+02:00
 tags:
 - blog
 - Japanese

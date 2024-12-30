@@ -6,6 +6,11 @@ paginate: 5
 images: /static/favicon.ico
 enableRobotsTXT: true
 
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
 languages:
   en:
     languageName: English
@@ -71,7 +76,6 @@ params:
           url: 'https://www.linkedin.com/in/tiziano-caruana/'
         - name: 'GitHub'
           url: 'https://github.com/Tiziano-Caruana'
-
 
     assets:
       favicon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNvCmIE7HEiLhByQCf2_uMI9ENQNto_kSmOjKv-BusCjO355SvJeQZmWMPBXS6wwaH7nQ&usqp=CAU'
